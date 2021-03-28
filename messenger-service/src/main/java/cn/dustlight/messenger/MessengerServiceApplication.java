@@ -1,4 +1,4 @@
-package cn.dustlight.messenger.service;
+package cn.dustlight.messenger;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,7 +1,7 @@
-package cn.dustlight.messenger.service.configurations;
+package cn.dustlight.messenger.configurations;
 
 import cn.dustlight.messenger.core.TokenService;
-import cn.dustlight.messenger.service.services.RabbitWebSocketHandler;
+import cn.dustlight.messenger.services.RabbitWebSocketHandler;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

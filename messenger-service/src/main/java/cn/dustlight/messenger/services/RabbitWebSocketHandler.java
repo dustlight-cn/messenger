@@ -1,4 +1,4 @@
-package cn.dustlight.messenger.service.services;
+package cn.dustlight.messenger.services;
 
 import cn.dustlight.messenger.core.AbstractWebsocketHandler;
 import cn.dustlight.messenger.core.Message;
