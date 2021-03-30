@@ -40,4 +40,6 @@ jobs:
       with:
         context: messenger-service
         push: true
-        tags: dustlightcn/messenger-service:${{  env.tagName  }}
+        tags: |
+          dustlightcn/messenger-service:${{  env.tagName  }}
+          dustlightcn/messenger-service:latest
