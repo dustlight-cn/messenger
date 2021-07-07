@@ -6,27 +6,54 @@
     <groupId>plus.messenger</groupId>
     <artifactId>messenger-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>messenger-parent</name>
-    <description>PLUS 消息服务</description>
+    <description>PLUS 消息推送服务</description>
 
     <properties>
         <java.version>11</java.version>
+
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <repackage.classifier/>
+        <spring-native.version>0.10.1</spring-native.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <spring-boot.version>2.5.2</spring-boot.version>
+        <auth.version>1.1.0-alpha-SNAPSHOT</auth.version>
     </properties>
 
     <modules>
-
+        <module>messenger-core</module>
+        <module>messenger-service</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <!-- <dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency> -->
+            </dependency>
+            <dependency>
+                <groupId>plus.messenger</groupId>
+                <artifactId>messenger-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>plus.messenger</groupId>
+                <artifactId>messenger-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>plus.auth</groupId>
+                <artifactId>auth-common</artifactId>
+                <version>${auth.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -49,6 +76,64 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                        <classifier>${repackage.classifier}</classifier>
+                        <image>
+                            <builder>paketobuildpacks/builder:tiny</builder>
+                            <env>
+                                <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                            </env>
+                        </image>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>pre-integration-test</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>post-integration-test</id>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.experimental</groupId>
+                    <artifactId>spring-aot-maven-plugin</artifactId>
+                    <version>${spring-native.version}</version>
+                    <executions>
+                        <execution>
+                            <id>test-generate</id>
+                            <goals>
+                                <goal>test-generate</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>generate</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <!-- Compiler -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -125,15 +210,69 @@
         </snapshotRepository>
     </distributionManagement>
 
-<!--    <url></url>-->
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
-<!--    <licenses>-->
-<!--        <license>-->
-<!--            <name>The Apache Software License, Version 2.0</name>-->
-<!--            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>-->
-<!--            <distribution>repo,manual</distribution>-->
-<!--        </license>-->
-<!--    </licenses>-->
+    <profiles>
+        <profile>
+            <id>native</id>
+            <properties>
+                <repackage.classifier>exec</repackage.classifier>
+                <native-buildtools.version>0.9.1</native-buildtools.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>junit-platform-native</artifactId>
+                    <version>${native-buildtools.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-buildtools.version}</version>
+                        <executions>
+                            <execution>
+                                <id>test-native</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>build-native</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <developers>
         <developer>
@@ -143,9 +282,4 @@
         </developer>
     </developers>
 
-<!--    <scm>-->
-<!--        <connection></connection>-->
-<!--        <developerConnection></developerConnection>-->
-<!--        <url></url>-->
-<!--    </scm>-->
 </project>
