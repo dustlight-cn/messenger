@@ -8,8 +8,8 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>messenger-core</artifactId>
-    <description>PLUS 消息推送服务 - 核心模块</description>
+    <artifactId>messenger-mongo</artifactId>
+    <description>PLUS 消息推送服务 - MongoDB 模块</description>
 
     <properties>
         <java.version>11</java.version>
@@ -17,21 +17,27 @@
 
     <dependencies>
         <dependency>
+            <groupId>plus.messenger</groupId>
+            <artifactId>messenger-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>plus.auth</groupId>
-            <artifactId>auth-entities</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>plus.auth</groupId>
-            <artifactId>auth-client-reactive</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
         </dependency>
     </dependencies>
 

@@ -14,17 +14,22 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <repackage.classifier/>
-        <spring-native.version>0.10.1</spring-native.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <repackage.classifier/>
+
         <spring-boot.version>2.5.2</spring-boot.version>
+        <spring-native.version>0.10.1</spring-native.version>
+        <springdoc.version>1.5.9</springdoc.version>
+
         <auth.version>1.1.0-alpha-SNAPSHOT</auth.version>
     </properties>
 
     <modules>
         <module>messenger-core</module>
+        <module>messenger-email</module>
+        <module>messenger-mongo</module>
+        <module>messenger-aliyun</module>
         <module>messenger-service</module>
     </modules>
 
@@ -39,7 +44,22 @@
             </dependency>
             <dependency>
                 <groupId>plus.messenger</groupId>
+                <artifactId>messenger-mongo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>plus.messenger</groupId>
                 <artifactId>messenger-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>plus.messenger</groupId>
+                <artifactId>messenger-email</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>plus.messenger</groupId>
+                <artifactId>messenger-aliyun</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -47,12 +67,20 @@
                 <artifactId>messenger-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>plus.auth</groupId>
                 <artifactId>auth-common</artifactId>
                 <version>${auth.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-webflux-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

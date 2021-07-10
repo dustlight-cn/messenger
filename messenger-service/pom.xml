@@ -24,10 +24,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
@@ -63,9 +60,32 @@
             <artifactId>spring-rabbit-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webflux-ui</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>plus.auth</groupId>
             <artifactId>auth-resource-server-reactive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>plus.auth</groupId>
+            <artifactId>auth-client-reactive</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>plus.messenger</groupId>
+            <artifactId>messenger-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>plus.messenger</groupId>
+            <artifactId>messenger-mongo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>plus.messenger</groupId>
+            <artifactId>messenger-email</artifactId>
         </dependency>
     </dependencies>
 

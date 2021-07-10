@@ -3,23 +3,23 @@ package plus.messenger.core.entities;
 import java.util.Date;
 import java.util.Map;
 
-public interface Message {
+public interface Notification {
 
     String getId();
 
+    String getTemplateId();
+
     Map<String,Object> getContent();
+
+    String getChannelId();
 
     String getSender();
 
-    String getReceiver();
-
     String getClientId();
-
-    Integer getStatus();
 
     Date getCreatedAt();
 
     Date getSentAt();
 
-    Date getReadAt();
+    String getStatus();
 }
