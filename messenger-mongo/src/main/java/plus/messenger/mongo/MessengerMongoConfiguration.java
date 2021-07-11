@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import plus.messenger.mongo.services.DefaultMongoChannelService;
+import plus.messenger.mongo.services.DefaultMongoNotificationStore;
 import plus.messenger.mongo.services.DefaultMongoTemplateManager;
 
 @EnableConfigurationProperties(MessengerMongoProperties.class)
@@ -25,5 +26,12 @@ public class MessengerMongoConfiguration {
     public DefaultMongoTemplateManager defaultMongoTemplateManager(@Autowired ReactiveMongoOperations operations,
                                                                   @Autowired MessengerMongoProperties properties){
         return new DefaultMongoTemplateManager(operations,properties.getTemplateCollectionName());
+    }
+
+    @Bean
+    @ConditionalOnBean(ReactiveMongoOperations.class)
+    public DefaultMongoNotificationStore defaultMongoNotificationStore(@Autowired ReactiveMongoOperations operations,
+                                                                     @Autowired MessengerMongoProperties properties){
+        return new DefaultMongoNotificationStore(operations,properties.getNotificationCollection());
     }
 }

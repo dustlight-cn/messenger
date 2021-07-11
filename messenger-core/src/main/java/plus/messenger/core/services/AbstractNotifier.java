@@ -10,6 +10,7 @@ import plus.messenger.core.entities.NotificationTemplate;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 @Getter
@@ -43,8 +44,10 @@ public abstract class AbstractNotifier<T extends Notification, V extends Notific
                             .flatMap(authUsers -> {
                                 try {
                                     doSendNotification(notification,template,authUsers.getData());
+                                    notification.setSentAt(new Date());
                                     return Mono.just(notification);
                                 } catch (Exception e){
+                                    notification.setStatus(e.getMessage());
                                     return Mono.error(e);
                                 }
                             });

@@ -9,5 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "plus.messenger.mongo")
 public class MessengerMongoProperties {
 
-    private String channelCollectionName = "channel", templateCollectionName = "template";
+    private String channelCollectionName = "channel",
+            templateCollectionName = "template",
+            notificationCollection = "notification";
 }
