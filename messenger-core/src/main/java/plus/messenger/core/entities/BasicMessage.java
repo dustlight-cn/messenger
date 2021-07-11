@@ -12,11 +12,11 @@ public class BasicMessage implements Message {
 
     private String id;
 
-    private String templateId,sender,receiver,clientId;
+    private String sender, receiver, clientId;
 
-    private Map<String,Object> content;
+    private Map<String, Object> content;
 
-    private Date createdAt,sentAt,readAt;
+    private Date createdAt, sentAt, readAt;
 
     private Integer status;
 

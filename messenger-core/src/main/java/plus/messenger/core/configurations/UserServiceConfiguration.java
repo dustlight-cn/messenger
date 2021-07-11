@@ -12,7 +12,7 @@ import plus.messenger.core.services.UserService;
 public class UserServiceConfiguration {
 
     @Bean
-//    @ConditionalOnBean(ReactiveAuthClient.class)
+    @ConditionalOnBean(ReactiveAuthClient.class)
     public UserService authUserService(@Autowired ReactiveAuthClient authClient){
         return new AuthUserService(authClient);
     }

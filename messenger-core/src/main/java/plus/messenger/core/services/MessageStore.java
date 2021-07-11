@@ -6,13 +6,15 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 
-public interface MessageStore {
+public interface MessageStore<T extends Message> {
 
-    Mono<Message> storeOne(Message message);
+    Mono<T> storeOne(T message);
 
-    Flux<Message> store(Collection<Message> messages);
+    Flux<T> store(Collection<T> messages);
 
-    Mono<Message> getOne(String messageId);
+    Mono<T> getOne(String messageId);
 
-    Flux<Message> get(Collection<String> messageIds);
+    Flux<T> get(Collection<String> messageIds);
+
+    Mono<T> update(T message);
 }
