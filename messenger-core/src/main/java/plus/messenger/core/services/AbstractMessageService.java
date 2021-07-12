@@ -17,8 +17,8 @@ import java.util.HashSet;
 @AllArgsConstructor
 public abstract class AbstractMessageService<C extends Channel> implements MessageService<BasicMessage> {
 
-    private MessageStore<BasicMessage> messageStore;
-    private ChannelService<C> channelService;
+    protected MessageStore<BasicMessage> messageStore;
+    protected ChannelService<C> channelService;
 
     public abstract Mono<BasicMessage> doSend(BasicMessage message);
 
@@ -28,7 +28,7 @@ public abstract class AbstractMessageService<C extends Channel> implements Messa
     public Mono<BasicMessage> sendMessage(BasicMessage message) {
         message.setId(null);
         message.setCreatedAt(new Date());
-        return messageStore.storeOne(message).flatMap(m -> doSend(m));
+        return messageStore.store(message).flatMap(m -> doSend(m));
     }
 
     @Override

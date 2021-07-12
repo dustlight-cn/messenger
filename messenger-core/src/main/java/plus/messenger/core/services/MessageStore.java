@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public interface MessageStore<T extends Message> {
 
-    Mono<T> storeOne(T message);
+    Mono<T> store(T message);
 
     Flux<T> store(Collection<T> messages);
 
@@ -17,4 +17,8 @@ public interface MessageStore<T extends Message> {
     Flux<T> get(Collection<String> messageIds);
 
     Mono<T> update(T message);
+
+    Flux<T> update(Collection<String> messageIds, T update);
+
+    Flux<T> getUnread(String clientId, String receiver);
 }
