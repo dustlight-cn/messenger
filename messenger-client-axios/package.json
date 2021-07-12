@@ -1,6 +1,6 @@
 {
   "name": "@plus/messenger-client-axios",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "Client SDK for Messenger-Service",
   "main": "index.ts",
   "scripts": {

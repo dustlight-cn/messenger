@@ -79,6 +79,67 @@ export interface BasicChannel {
 /**
  * 
  * @export
+ * @interface BasicMessage
+ */
+export interface BasicMessage {
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    sender?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    receiver?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    clientId?: string;
+    /**
+     * 
+     * @type {{ [key: string]: object; }}
+     * @memberof BasicMessage
+     */
+    content?: { [key: string]: object; };
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    createdAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    sentAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
+    readAt?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof BasicMessage
+     */
+    status?: number;
+}
+/**
+ * 
+ * @export
  * @interface BasicNotification
  */
 export interface BasicNotification {
@@ -244,6 +305,67 @@ export interface Channel {
 /**
  * 
  * @export
+ * @interface Message
+ */
+export interface Message {
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    id?: string;
+    /**
+     * 
+     * @type {{ [key: string]: object; }}
+     * @memberof Message
+     */
+    content?: { [key: string]: object; };
+    /**
+     * 
+     * @type {number}
+     * @memberof Message
+     */
+    status?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    clientId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    sender?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    createdAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    receiver?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    sentAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    readAt?: string;
+}
+/**
+ * 
+ * @export
  * @interface Notification
  */
 export interface Notification {
@@ -264,6 +386,12 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
+    status?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Notification
+     */
     clientId?: string;
     /**
      * 
@@ -276,7 +404,13 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    status?: string;
+    createdAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Notification
+     */
+    sentAt?: string;
     /**
      * 
      * @type {string}
@@ -289,18 +423,6 @@ export interface Notification {
      * @memberof Notification
      */
     templateId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Notification
-     */
-    createdAt?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Notification
-     */
-    sentAt?: string;
 }
 /**
  * 
@@ -337,13 +459,13 @@ export interface NotificationTemplate {
      * @type {string}
      * @memberof NotificationTemplate
      */
-    clientId?: string;
+    status?: string;
     /**
      * 
      * @type {string}
      * @memberof NotificationTemplate
      */
-    status?: string;
+    clientId?: string;
 }
 /**
  * 
@@ -683,18 +805,22 @@ export class ChannelsApi extends BaseAPI {
 
 
 /**
- * MessengerServiceApplicationApi - axios parameter creator
+ * MessagesApi - axios parameter creator
  * @export
  */
-export const MessengerServiceApplicationApiAxiosParamCreator = function (configuration?: Configuration) {
+export const MessagesApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {BasicMessage} basicMessage 
+         * @param {string} [channel] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        test: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/test`;
+        sendMessage: async (basicMessage: BasicMessage, channel?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'basicMessage' is not null or undefined
+            assertParamExists('sendMessage', 'basicMessage', basicMessage)
+            const localVarPath = `/v1/messages`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -702,15 +828,26 @@ export const MessengerServiceApplicationApiAxiosParamCreator = function (configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication auth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
+
+            if (channel !== undefined) {
+                localVarQueryParameter['channel'] = channel;
+            }
+
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(basicMessage, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -721,66 +858,72 @@ export const MessengerServiceApplicationApiAxiosParamCreator = function (configu
 };
 
 /**
- * MessengerServiceApplicationApi - functional programming interface
+ * MessagesApi - functional programming interface
  * @export
  */
-export const MessengerServiceApplicationApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MessengerServiceApplicationApiAxiosParamCreator(configuration)
+export const MessagesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = MessagesApiAxiosParamCreator(configuration)
     return {
         /**
          * 
+         * @param {BasicMessage} basicMessage 
+         * @param {string} [channel] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async test(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.test(options);
+        async sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sendMessage(basicMessage, channel, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
 };
 
 /**
- * MessengerServiceApplicationApi - factory interface
+ * MessagesApi - factory interface
  * @export
  */
-export const MessengerServiceApplicationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MessengerServiceApplicationApiFp(configuration)
+export const MessagesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = MessagesApiFp(configuration)
     return {
         /**
          * 
+         * @param {BasicMessage} basicMessage 
+         * @param {string} [channel] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        test(options?: any): AxiosPromise<object> {
-            return localVarFp.test(options).then((request) => request(axios, basePath));
+        sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): AxiosPromise<Array<Message>> {
+            return localVarFp.sendMessage(basicMessage, channel, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * MessengerServiceApplicationApi - object-oriented interface
+ * MessagesApi - object-oriented interface
  * @export
- * @class MessengerServiceApplicationApi
+ * @class MessagesApi
  * @extends {BaseAPI}
  */
-export class MessengerServiceApplicationApi extends BaseAPI {
+export class MessagesApi extends BaseAPI {
     /**
      * 
+     * @param {BasicMessage} basicMessage 
+     * @param {string} [channel] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof MessengerServiceApplicationApi
+     * @memberof MessagesApi
      */
-    public test(options?: any) {
-        return MessengerServiceApplicationApiFp(this.configuration).test(options).then((request) => request(this.axios, this.basePath));
+    public sendMessage(basicMessage: BasicMessage, channel?: string, options?: any) {
+        return MessagesApiFp(this.configuration).sendMessage(basicMessage, channel, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
 /**
- * NotificationControllerApi - axios parameter creator
+ * NotificationsApi - axios parameter creator
  * @export
  */
-export const NotificationControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const NotificationsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -826,15 +969,52 @@ export const NotificationControllerApiAxiosParamCreator = function (configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNotification: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getNotification', 'id', id)
+            const localVarPath = `/v1/notifications/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication auth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
 /**
- * NotificationControllerApi - functional programming interface
+ * NotificationsApi - functional programming interface
  * @export
  */
-export const NotificationControllerApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = NotificationControllerApiAxiosParamCreator(configuration)
+export const NotificationsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = NotificationsApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -847,15 +1027,25 @@ export const NotificationControllerApiFp = function(configuration?: Configuratio
             const localVarAxiosArgs = await localVarAxiosParamCreator.createNotification(basicNotification, type, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getNotification(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNotification(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
 /**
- * NotificationControllerApi - factory interface
+ * NotificationsApi - factory interface
  * @export
  */
-export const NotificationControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = NotificationControllerApiFp(configuration)
+export const NotificationsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = NotificationsApiFp(configuration)
     return {
         /**
          * 
@@ -867,26 +1057,46 @@ export const NotificationControllerApiFactory = function (configuration?: Config
         createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any): AxiosPromise<Notification> {
             return localVarFp.createNotification(basicNotification, type, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNotification(id: string, options?: any): AxiosPromise<Notification> {
+            return localVarFp.getNotification(id, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
 /**
- * NotificationControllerApi - object-oriented interface
+ * NotificationsApi - object-oriented interface
  * @export
- * @class NotificationControllerApi
+ * @class NotificationsApi
  * @extends {BaseAPI}
  */
-export class NotificationControllerApi extends BaseAPI {
+export class NotificationsApi extends BaseAPI {
     /**
      * 
      * @param {BasicNotification} basicNotification 
      * @param {'EMAIL'} [type] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationControllerApi
+     * @memberof NotificationsApi
      */
     public createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any) {
-        return NotificationControllerApiFp(this.configuration).createNotification(basicNotification, type, options).then((request) => request(this.axios, this.basePath));
+        return NotificationsApiFp(this.configuration).createNotification(basicNotification, type, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotificationsApi
+     */
+    public getNotification(id: string, options?: any) {
+        return NotificationsApiFp(this.configuration).getNotification(id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -985,20 +1195,14 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
-         * @param {string} key 
-         * @param {number} page 
-         * @param {number} size 
+         * @param {string} [key] 
+         * @param {number} [page] 
+         * @param {number} [size] 
          * @param {'COMMON'} [type] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findTemplates: async (key: string, page: number, size: number, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'key' is not null or undefined
-            assertParamExists('findTemplates', 'key', key)
-            // verify required parameter 'page' is not null or undefined
-            assertParamExists('findTemplates', 'page', page)
-            // verify required parameter 'size' is not null or undefined
-            assertParamExists('findTemplates', 'size', size)
+        findTemplates: async (key?: string, page?: number, size?: number, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/templates`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1166,14 +1370,14 @@ export const TemplatesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} key 
-         * @param {number} page 
-         * @param {number} size 
+         * @param {string} [key] 
+         * @param {number} [page] 
+         * @param {number} [size] 
          * @param {'COMMON'} [type] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findTemplates(key: string, page: number, size: number, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>> {
+        async findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findTemplates(key, page, size, type, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1232,14 +1436,14 @@ export const TemplatesApiFactory = function (configuration?: Configuration, base
         },
         /**
          * 
-         * @param {string} key 
-         * @param {number} page 
-         * @param {number} size 
+         * @param {string} [key] 
+         * @param {number} [page] 
+         * @param {number} [size] 
          * @param {'COMMON'} [type] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findTemplates(key: string, page: number, size: number, type?: 'COMMON', options?: any): AxiosPromise<QueryResultNotificationTemplate> {
+        findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): AxiosPromise<QueryResultNotificationTemplate> {
             return localVarFp.findTemplates(key, page, size, type, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1299,15 +1503,15 @@ export class TemplatesApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} key 
-     * @param {number} page 
-     * @param {number} size 
+     * @param {string} [key] 
+     * @param {number} [page] 
+     * @param {number} [size] 
      * @param {'COMMON'} [type] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    public findTemplates(key: string, page: number, size: number, type?: 'COMMON', options?: any) {
+    public findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any) {
         return TemplatesApiFp(this.configuration).findTemplates(key, page, size, type, options).then((request) => request(this.axios, this.basePath));
     }
 
