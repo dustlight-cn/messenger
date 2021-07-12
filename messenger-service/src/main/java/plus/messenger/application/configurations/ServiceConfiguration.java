@@ -42,17 +42,18 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(@Autowired ConnectionFactory factory,
-                                         @Autowired Exchange exchange) {
+    public RabbitTemplate template(@Autowired ConnectionFactory factory,
+                                   @Autowired Exchange exchange) {
         RabbitTemplate template = new RabbitTemplate(factory);
         template.setExchange(exchange.getName());
-        return new RabbitTemplate(factory);
+        return template;
     }
 
     @Bean
     public RabbitMqMessageService rabbitMqMessageService(@Autowired RabbitTemplate template,
                                                          @Autowired MessageStore messageStore,
-                                                         @Autowired ChannelService channelService) {
-        return new RabbitMqMessageService(messageStore, channelService, template);
+                                                         @Autowired ChannelService channelService,
+                                                         @Autowired RabbitAdmin rabbitAdmin) {
+        return new RabbitMqMessageService(messageStore, channelService, template, rabbitAdmin);
     }
 }
