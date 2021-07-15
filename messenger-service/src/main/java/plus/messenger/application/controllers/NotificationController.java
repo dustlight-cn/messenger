@@ -21,6 +21,7 @@ import java.util.Map;
 @RequestMapping("/v1/notifications")
 @SecurityRequirement(name = "auth")
 @Tag(name = "Notifications", description = "通知")
+@CrossOrigin
 public class NotificationController implements InitializingBean {
 
     @Autowired

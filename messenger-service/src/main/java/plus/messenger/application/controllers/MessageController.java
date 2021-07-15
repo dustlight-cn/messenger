@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/v1/messages")
 @SecurityRequirement(name = "auth")
 @Tag(name = "Messages", description = "消息")
+@CrossOrigin
 public class MessageController {
 
     @Autowired

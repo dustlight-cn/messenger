@@ -19,6 +19,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/v1/channels")
 @SecurityRequirement(name = "auth")
+@CrossOrigin
 public class ChannelController {
 
     @Autowired

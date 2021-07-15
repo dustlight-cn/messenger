@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/templates")
 @SecurityRequirement(name = "auth")
+@CrossOrigin
 public class TemplateController implements InitializingBean {
 
     @Autowired
