@@ -51,7 +51,7 @@ public class TemplateController implements InitializingBean {
                                                              TemplateType templateType) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
         template.setClientId(authPrincipal.getClientId());
-        template.setOwner(authPrincipal.getUid().toString());
+        template.setOwner(authPrincipal.getUidString());
         return getManager(templateType).createTemplate(template);
     }
 
@@ -87,7 +87,7 @@ public class TemplateController implements InitializingBean {
                                                                  @RequestParam(name = "type", required = false, defaultValue = "COMMON")
                                                                          TemplateType templateType) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return getManager(templateType).getTemplates(key, page, size, authPrincipal.getClientId(), authPrincipal.getUid().toString());
+        return getManager(templateType).getTemplates(key, page, size, authPrincipal.getClientId(), authPrincipal.getUidString());
     }
 
     @Override

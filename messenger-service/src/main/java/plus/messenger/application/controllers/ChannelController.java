@@ -37,10 +37,10 @@ public class ChannelController {
                                        AbstractOAuth2TokenAuthenticationToken principal) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
         if (channel.getOwner() != null) {
-            if (!channel.getOwner().contains(authPrincipal.getUid().toString()))
-                channel.getOwner().add(authPrincipal.getUid().toString());
+            if (!channel.getOwner().contains(authPrincipal.getUidString()))
+                channel.getOwner().add(authPrincipal.getUidString());
         } else {
-            channel.setOwner(Arrays.asList(authPrincipal.getUid().toString()));
+            channel.setOwner(Arrays.asList(authPrincipal.getUidString()));
         }
         channel.setId(null);
         channel.setClientId(authPrincipal.getClientId());

@@ -124,7 +124,7 @@ public class RabbitWebSocketHandler extends AbstractWebsocketHandler {
             });
             emitter.onRequest(value -> {
                 simpleMessageListenerContainer.start();
-                messageStore.getUnread(principal.getClientId(),principal.getUid().toString())
+                messageStore.getUnread(principal.getClientId(),principal.getUidString())
                         .collectList()
                         .subscribe(tmp -> {
                             List<BasicMessage> messages = (List<BasicMessage>) tmp;
