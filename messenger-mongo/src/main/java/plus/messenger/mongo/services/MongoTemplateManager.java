@@ -83,12 +83,12 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
         return StringUtils.hasText(key) ?
                 operations.count(Query.query(TextCriteria.forDefaultLanguage().matching(key))
                                 .addCriteria(where("clientId").is(clientId)
-                                        .and("owner").elemMatch(new Criteria("$eq").is(owner))),
+                                        .and("owner").is(owner)),
                         getEntitiesClass(),
                         collectionName)
                         .flatMap(c -> operations.find(Query.query(TextCriteria.forDefaultLanguage().matching(key))
                                         .addCriteria(where("clientId").is(clientId)
-                                                .and("owner").elemMatch(new Criteria("$eq").is(owner)))
+                                                .and("owner").is(owner))
                                         .with(Pageable.ofSize(size).withPage(page)),
                                 getEntitiesClass(),
                                 collectionName)
@@ -96,11 +96,11 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
                                 .map(templates -> new QueryResult<>(c, templates))
                         ) :
                 operations.count(Query.query(where("clientId").is(clientId)
-                                .and("owner").elemMatch(new Criteria("$eq").is(owner))),
+                                .and("owner").is(owner)),
                         getEntitiesClass(),
                         collectionName)
                         .flatMap(c -> operations.find(Query.query(where("clientId").is(clientId)
-                                        .and("owner").elemMatch(new Criteria("$eq").is(owner)))
+                                        .and("owner").is(owner))
                                         .with(Pageable.ofSize(size).withPage(page)),
                                 getEntitiesClass(),
                                 collectionName)

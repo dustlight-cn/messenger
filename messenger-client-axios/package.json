@@ -1,0 +1,13 @@
+{
+  "name": "@plus/messenger-client-axios",
+  "version": "0.0.2-alpha",
+  "description": "Client SDK for Messenger-Service",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "~0.21.1"
+  },
+  "author": "Hansin <hansin@goodvoice.com>"
+}

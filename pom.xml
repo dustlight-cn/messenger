@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <groupId>plus.messenger</groupId>
     <artifactId>messenger-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <description>PLUS 消息推送服务</description>
 
     <properties>
@@ -22,7 +22,7 @@
         <spring-native.version>0.10.1</spring-native.version>
         <springdoc.version>1.5.9</springdoc.version>
 
-        <auth.version>1.1.0-alpha-SNAPSHOT</auth.version>
+        <auth.version>1.1.0-alpha-1-SNAPSHOT</auth.version>
     </properties>
 
     <modules>
@@ -90,7 +90,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

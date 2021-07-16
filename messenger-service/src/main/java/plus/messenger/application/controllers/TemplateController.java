@@ -2,7 +2,6 @@ package plus.messenger.application.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.Aware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
@@ -24,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/templates")
 @SecurityRequirement(name = "auth")
+@CrossOrigin
 public class TemplateController implements InitializingBean {
 
     @Autowired
@@ -51,7 +51,7 @@ public class TemplateController implements InitializingBean {
                                                              TemplateType templateType) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
         template.setClientId(authPrincipal.getClientId());
-        template.setOwner(authPrincipal.getUid().toString());
+        template.setOwner(authPrincipal.getUidString());
         return getManager(templateType).createTemplate(template);
     }
 
@@ -80,14 +80,14 @@ public class TemplateController implements InitializingBean {
     }
 
     @GetMapping
-    public Mono<QueryResult<NotificationTemplate>> findTemplates(@RequestParam String key,
-                                                                 @RequestParam int page,
-                                                                 @RequestParam int size,
+    public Mono<QueryResult<NotificationTemplate>> findTemplates(@RequestParam(required = false) String key,
+                                                                 @RequestParam(required = false,defaultValue = "0") int page,
+                                                                 @RequestParam(required = false,defaultValue = "10") int size,
                                                                  AbstractOAuth2TokenAuthenticationToken principal,
                                                                  @RequestParam(name = "type", required = false, defaultValue = "COMMON")
                                                                          TemplateType templateType) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return getManager(templateType).getTemplates(key, page, size, authPrincipal.getClientId(), authPrincipal.getUid().toString());
+        return getManager(templateType).getTemplates(key, page, size, authPrincipal.getClientId(), authPrincipal.getUidString());
     }
 
     @Override

@@ -25,7 +25,8 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
 
     @Override
     public Mono<T> getChannel(String channelId) {
-        return operations.findById(channelId,getEntitiesClass(),collectionName);
+        return operations.findById(channelId,getEntitiesClass(),collectionName)
+                .switchIfEmpty(Mono.error(ErrorEnum.UNKNOWN.getException()));
     }
 
     @Override

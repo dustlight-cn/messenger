@@ -1,13 +1,14 @@
 package plus.messenger.core.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-public interface Message {
+public interface Message extends Serializable {
 
     String getId();
 
-    Map<String,Object> getContent();
+    Map<String, Object> getContent();
 
     String getSender();
 
@@ -22,4 +23,23 @@ public interface Message {
     Date getSentAt();
 
     Date getReadAt();
+
+    void setId(String id);
+
+    void setContent(Map<String, Object> content);
+
+    void setSender(String sender);
+
+    void setReceiver(String receiver);
+
+    void setClientId(String clientId);
+
+    void setStatus(Integer status);
+
+    void setCreatedAt(Date createdAt);
+
+    void setSentAt(Date sentAt);
+
+    void setReadAt(Date readAt);
+
 }
