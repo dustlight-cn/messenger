@@ -42,7 +42,8 @@ public class NotificationController implements InitializingBean {
             AbstractOAuth2TokenAuthenticationToken principal) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
         notification.setClientId(authPrincipal.getClientId());
-        notification.setSender(authPrincipal.getUidString());
+        if (authPrincipal.getUid() != null)
+            notification.setSender(authPrincipal.getUidString());
         return getManager(type).sendNotification(notification);
     }
 

@@ -36,12 +36,13 @@ public class ChannelController {
     public Mono<Channel> createChannel(@RequestBody BasicChannel channel,
                                        AbstractOAuth2TokenAuthenticationToken principal) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        if (channel.getOwner() != null) {
-            if (!channel.getOwner().contains(authPrincipal.getUidString()))
-                channel.getOwner().add(authPrincipal.getUidString());
-        } else {
-            channel.setOwner(Arrays.asList(authPrincipal.getUidString()));
-        }
+        if (authPrincipal.getUid() != null)
+            if (channel.getOwner() != null) {
+                if (!channel.getOwner().contains(authPrincipal.getUidString()))
+                    channel.getOwner().add(authPrincipal.getUidString());
+            } else {
+                channel.setOwner(Arrays.asList(authPrincipal.getUidString()));
+            }
         channel.setId(null);
         channel.setClientId(authPrincipal.getClientId());
 

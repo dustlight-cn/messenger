@@ -28,7 +28,8 @@ public class MessageController {
                                      @RequestParam(required = false) String channel,
                                      AbstractOAuth2TokenAuthenticationToken principal) {
         AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        message.setSender(authPrincipal.getUidString());
+        if (authPrincipal.getUid() != null)
+            message.setSender(authPrincipal.getUidString());
         message.setClientId(authPrincipal.getClientId());
         if (StringUtils.hasText(channel))
             return service.sendMessage(message, channel);
