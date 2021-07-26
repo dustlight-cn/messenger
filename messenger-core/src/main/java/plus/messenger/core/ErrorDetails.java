@@ -10,6 +10,10 @@ public class ErrorDetails {
     @JsonIgnore
     private transient MessengerException exception;
 
+    public ErrorDetails() {
+
+    }
+
     public ErrorDetails(int code, String message) {
         this.code = code;
         this.message = message;
@@ -60,6 +64,8 @@ public class ErrorDetails {
     }
 
     public MessengerException getException() {
+        if (exception == null)
+            exception = new MessengerException(this);
         return exception;
     }
 
