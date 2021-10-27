@@ -321,12 +321,6 @@ export interface Message {
     };
     /**
      *
-     * @type {number}
-     * @memberof Message
-     */
-    status?: number;
-    /**
-     *
      * @type {string}
      * @memberof Message
      */
@@ -339,16 +333,22 @@ export interface Message {
     sender?: string;
     /**
      *
-     * @type {string}
+     * @type {number}
      * @memberof Message
      */
-    createdAt?: string;
+    status?: number;
     /**
      *
      * @type {string}
      * @memberof Message
      */
-    receiver?: string;
+    readAt?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Message
+     */
+    createdAt?: string;
     /**
      *
      * @type {string}
@@ -360,7 +360,7 @@ export interface Message {
      * @type {string}
      * @memberof Message
      */
-    readAt?: string;
+    receiver?: string;
 }
 /**
  *
@@ -387,12 +387,6 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    status?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Notification
-     */
     clientId?: string;
     /**
      *
@@ -400,6 +394,12 @@ export interface Notification {
      * @memberof Notification
      */
     sender?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Notification
+     */
+    status?: string;
     /**
      *
      * @type {string}
@@ -460,13 +460,13 @@ export interface NotificationTemplate {
      * @type {string}
      * @memberof NotificationTemplate
      */
-    status?: string;
+    clientId?: string;
     /**
      *
      * @type {string}
      * @memberof NotificationTemplate
      */
-    clientId?: string;
+    status?: string;
 }
 /**
  *
@@ -495,32 +495,36 @@ export declare const ChannelsApiAxiosParamCreator: (configuration?: Configuratio
     /**
      *
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createChannel: (basicChannel: BasicChannel, options?: any) => Promise<RequestArgs>;
+    createChannel: (basicChannel: BasicChannel, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteChannel: (id: string, options?: any) => Promise<RequestArgs>;
+    deleteChannel: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChannel: (id: string, options?: any) => Promise<RequestArgs>;
+    getChannel: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateChannel: (id: string, basicChannel: BasicChannel, options?: any) => Promise<RequestArgs>;
+    updateChannel: (id: string, basicChannel: BasicChannel, cid?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * ChannelsApi - functional programming interface
@@ -530,32 +534,36 @@ export declare const ChannelsApiFp: (configuration?: Configuration) => {
     /**
      *
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createChannel(basicChannel: BasicChannel, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
+    createChannel(basicChannel: BasicChannel, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteChannel(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
+    deleteChannel(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChannel(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
+    getChannel(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
     /**
      *
      * @param {string} id
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateChannel(id: string, basicChannel: BasicChannel, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
+    updateChannel(id: string, basicChannel: BasicChannel, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
 };
 /**
  * ChannelsApi - factory interface
@@ -565,32 +573,36 @@ export declare const ChannelsApiFactory: (configuration?: Configuration, basePat
     /**
      *
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createChannel(basicChannel: BasicChannel, options?: any): AxiosPromise<Channel>;
+    createChannel(basicChannel: BasicChannel, cid?: string, options?: any): AxiosPromise<Channel>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteChannel(id: string, options?: any): AxiosPromise<Channel>;
+    deleteChannel(id: string, cid?: string, options?: any): AxiosPromise<Channel>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChannel(id: string, options?: any): AxiosPromise<Channel>;
+    getChannel(id: string, cid?: string, options?: any): AxiosPromise<Channel>;
     /**
      *
      * @param {string} id
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateChannel(id: string, basicChannel: BasicChannel, options?: any): AxiosPromise<Channel>;
+    updateChannel(id: string, basicChannel: BasicChannel, cid?: string, options?: any): AxiosPromise<Channel>;
 };
 /**
  * ChannelsApi - object-oriented interface
@@ -602,36 +614,40 @@ export declare class ChannelsApi extends BaseAPI {
     /**
      *
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    createChannel(basicChannel: BasicChannel, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
+    createChannel(basicChannel: BasicChannel, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    deleteChannel(id: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
+    deleteChannel(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    getChannel(id: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
+    getChannel(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
     /**
      *
      * @param {string} id
      * @param {BasicChannel} basicChannel
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    updateChannel(id: string, basicChannel: BasicChannel, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
+    updateChannel(id: string, basicChannel: BasicChannel, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
 }
 /**
  * MessagesApi - axios parameter creator
@@ -642,10 +658,11 @@ export declare const MessagesApiAxiosParamCreator: (configuration?: Configuratio
      *
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    sendMessage: (basicMessage: BasicMessage, channel?: string, options?: any) => Promise<RequestArgs>;
+    sendMessage: (basicMessage: BasicMessage, channel?: string, cid?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * MessagesApi - functional programming interface
@@ -656,10 +673,11 @@ export declare const MessagesApiFp: (configuration?: Configuration) => {
      *
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
+    sendMessage(basicMessage: BasicMessage, channel?: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
 };
 /**
  * MessagesApi - factory interface
@@ -670,10 +688,11 @@ export declare const MessagesApiFactory: (configuration?: Configuration, basePat
      *
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): AxiosPromise<Array<Message>>;
+    sendMessage(basicMessage: BasicMessage, channel?: string, cid?: string, options?: any): AxiosPromise<Array<Message>>;
 };
 /**
  * MessagesApi - object-oriented interface
@@ -686,11 +705,12 @@ export declare class MessagesApi extends BaseAPI {
      *
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
+    sendMessage(basicMessage: BasicMessage, channel?: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
 }
 /**
  * NotificationsApi - axios parameter creator
@@ -701,17 +721,19 @@ export declare const NotificationsApiAxiosParamCreator: (configuration?: Configu
      *
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createNotification: (basicNotification: BasicNotification, type?: 'EMAIL', options?: any) => Promise<RequestArgs>;
+    createNotification: (basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getNotification: (id: string, options?: any) => Promise<RequestArgs>;
+    getNotification: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * NotificationsApi - functional programming interface
@@ -722,17 +744,19 @@ export declare const NotificationsApiFp: (configuration?: Configuration) => {
      *
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>>;
+    createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getNotification(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>>;
+    getNotification(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>>;
 };
 /**
  * NotificationsApi - factory interface
@@ -743,17 +767,19 @@ export declare const NotificationsApiFactory: (configuration?: Configuration, ba
      *
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any): AxiosPromise<Notification>;
+    createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<Notification>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getNotification(id: string, options?: any): AxiosPromise<Notification>;
+    getNotification(id: string, cid?: string, options?: any): AxiosPromise<Notification>;
 };
 /**
  * NotificationsApi - object-oriented interface
@@ -766,19 +792,21 @@ export declare class NotificationsApi extends BaseAPI {
      *
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any): Promise<import("axios").AxiosResponse<Notification>>;
+    createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<Notification>>;
     /**
      *
      * @param {string} id
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    getNotification(id: string, options?: any): Promise<import("axios").AxiosResponse<Notification>>;
+    getNotification(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Notification>>;
 }
 /**
  * TemplatesApi - axios parameter creator
@@ -789,45 +817,50 @@ export declare const TemplatesApiAxiosParamCreator: (configuration?: Configurati
      *
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createTemplate: (basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any) => Promise<RequestArgs>;
+    createTemplate: (basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTemplate: (id: string, type?: 'COMMON', options?: any) => Promise<RequestArgs>;
+    deleteTemplate: (id: string, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    findTemplates: (key?: string, page?: number, size?: number, type?: 'COMMON', options?: any) => Promise<RequestArgs>;
+    findTemplates: (key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getTemplate: (id: string, type?: 'COMMON', options?: any) => Promise<RequestArgs>;
+    getTemplate: (id: string, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateTemplate: (id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any) => Promise<RequestArgs>;
+    updateTemplate: (id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * TemplatesApi - functional programming interface
@@ -838,45 +871,50 @@ export declare const TemplatesApiFp: (configuration?: Configuration) => {
      *
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
+    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTemplate(id: string, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>>;
+    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getTemplate(id: string, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
+    getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
     /**
      *
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
 };
 /**
  * TemplatesApi - factory interface
@@ -887,45 +925,50 @@ export declare const TemplatesApiFactory: (configuration?: Configuration, basePa
      *
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): AxiosPromise<NotificationTemplate>;
+    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<NotificationTemplate>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTemplate(id: string, type?: 'COMMON', options?: any): AxiosPromise<void>;
+    deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<void>;
     /**
      *
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): AxiosPromise<QueryResultNotificationTemplate>;
+    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<QueryResultNotificationTemplate>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getTemplate(id: string, type?: 'COMMON', options?: any): AxiosPromise<NotificationTemplate>;
+    getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<NotificationTemplate>;
     /**
      *
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): AxiosPromise<void>;
+    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<void>;
 };
 /**
  * TemplatesApi - object-oriented interface
@@ -938,48 +981,53 @@ export declare class TemplatesApi extends BaseAPI {
      *
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
+    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    deleteTemplate(id: string, type?: 'COMMON', options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): Promise<import("axios").AxiosResponse<QueryResultNotificationTemplate>>;
+    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<QueryResultNotificationTemplate>>;
     /**
      *
      * @param {string} id
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    getTemplate(id: string, type?: 'COMMON', options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
+    getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
     /**
      *
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
      * @param {'COMMON'} [type]
+     * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): Promise<import("axios").AxiosResponse<void>>;
+    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }

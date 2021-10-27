@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import plus.auth.client.reactive.ReactiveAuthClient;
 import plus.auth.resources.AuthPrincipalUtil;
 import plus.auth.resources.core.AuthPrincipal;
 import plus.messenger.core.entities.BasicNotification;
@@ -39,22 +40,29 @@ public class NotificationController implements InitializingBean {
     public Mono<Notification> createNotification(
             @RequestParam(required = false, name = "type", defaultValue = "EMAIL") NotificationType type,
             @RequestBody BasicNotification notification,
-            AbstractOAuth2TokenAuthenticationToken principal) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        notification.setClientId(authPrincipal.getClientId());
-        if (authPrincipal.getUid() != null)
-            notification.setSender(authPrincipal.getUidString());
-        return getManager(type).sendNotification(notification);
+            @RequestParam(name = "cid", required = false) String clientId,
+            ReactiveAuthClient reactiveAuthClient,
+            AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> {
+                    notification.setClientId(cid);
+                    if (StringUtils.hasText(principal.getUidString()))
+                        notification.setSender(principal.getUidString());
+                    return getManager(type).sendNotification(notification);
+                });
     }
 
     @GetMapping("/{id}")
     public Mono<Notification> getNotification(@PathVariable String id,
-                                              AbstractOAuth2TokenAuthenticationToken principal) {
-        return emailNotificationService.get(id);
+                                              @RequestParam(name = "cid", required = false) String clientId,
+                                              ReactiveAuthClient reactiveAuthClient,
+                                              AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> emailNotificationService.get(id));
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         notifierMap.put(NotificationType.EMAIL, emailNotificationService);
     }
 

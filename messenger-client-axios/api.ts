@@ -322,12 +322,6 @@ export interface Message {
     content?: { [key: string]: object; };
     /**
      * 
-     * @type {number}
-     * @memberof Message
-     */
-    status?: number;
-    /**
-     * 
      * @type {string}
      * @memberof Message
      */
@@ -340,16 +334,22 @@ export interface Message {
     sender?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Message
      */
-    createdAt?: string;
+    status?: number;
     /**
      * 
      * @type {string}
      * @memberof Message
      */
-    receiver?: string;
+    readAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    createdAt?: string;
     /**
      * 
      * @type {string}
@@ -361,7 +361,7 @@ export interface Message {
      * @type {string}
      * @memberof Message
      */
-    readAt?: string;
+    receiver?: string;
 }
 /**
  * 
@@ -386,12 +386,6 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    status?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Notification
-     */
     clientId?: string;
     /**
      * 
@@ -399,6 +393,12 @@ export interface Notification {
      * @memberof Notification
      */
     sender?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Notification
+     */
+    status?: string;
     /**
      * 
      * @type {string}
@@ -459,13 +459,13 @@ export interface NotificationTemplate {
      * @type {string}
      * @memberof NotificationTemplate
      */
-    status?: string;
+    clientId?: string;
     /**
      * 
      * @type {string}
      * @memberof NotificationTemplate
      */
-    clientId?: string;
+    status?: string;
 }
 /**
  * 
@@ -496,10 +496,11 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @param {BasicChannel} basicChannel 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createChannel: async (basicChannel: BasicChannel, options: any = {}): Promise<RequestArgs> => {
+        createChannel: async (basicChannel: BasicChannel, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'basicChannel' is not null or undefined
             assertParamExists('createChannel', 'basicChannel', basicChannel)
             const localVarPath = `/v1/channels`;
@@ -518,6 +519,10 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -535,10 +540,11 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteChannel: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        deleteChannel: async (id: string, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('deleteChannel', 'id', id)
             const localVarPath = `/v1/channels/{id}`
@@ -558,6 +564,10 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -572,10 +582,11 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChannel: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        getChannel: async (id: string, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getChannel', 'id', id)
             const localVarPath = `/v1/channels/{id}`
@@ -595,6 +606,10 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -610,10 +625,11 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
          * 
          * @param {string} id 
          * @param {BasicChannel} basicChannel 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateChannel: async (id: string, basicChannel: BasicChannel, options: any = {}): Promise<RequestArgs> => {
+        updateChannel: async (id: string, basicChannel: BasicChannel, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('updateChannel', 'id', id)
             // verify required parameter 'basicChannel' is not null or undefined
@@ -634,6 +650,10 @@ export const ChannelsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication auth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
+
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
 
 
     
@@ -662,42 +682,46 @@ export const ChannelsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {BasicChannel} basicChannel 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createChannel(basicChannel: BasicChannel, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createChannel(basicChannel, options);
+        async createChannel(basicChannel: BasicChannel, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createChannel(basicChannel, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteChannel(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteChannel(id, options);
+        async deleteChannel(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteChannel(id, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getChannel(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getChannel(id, options);
+        async getChannel(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChannel(id, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} id 
          * @param {BasicChannel} basicChannel 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateChannel(id: string, basicChannel: BasicChannel, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateChannel(id, basicChannel, options);
+        async updateChannel(id: string, basicChannel: BasicChannel, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateChannel(id, basicChannel, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -713,39 +737,43 @@ export const ChannelsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @param {BasicChannel} basicChannel 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createChannel(basicChannel: BasicChannel, options?: any): AxiosPromise<Channel> {
-            return localVarFp.createChannel(basicChannel, options).then((request) => request(axios, basePath));
+        createChannel(basicChannel: BasicChannel, cid?: string, options?: any): AxiosPromise<Channel> {
+            return localVarFp.createChannel(basicChannel, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteChannel(id: string, options?: any): AxiosPromise<Channel> {
-            return localVarFp.deleteChannel(id, options).then((request) => request(axios, basePath));
+        deleteChannel(id: string, cid?: string, options?: any): AxiosPromise<Channel> {
+            return localVarFp.deleteChannel(id, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChannel(id: string, options?: any): AxiosPromise<Channel> {
-            return localVarFp.getChannel(id, options).then((request) => request(axios, basePath));
+        getChannel(id: string, cid?: string, options?: any): AxiosPromise<Channel> {
+            return localVarFp.getChannel(id, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
          * @param {BasicChannel} basicChannel 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateChannel(id: string, basicChannel: BasicChannel, options?: any): AxiosPromise<Channel> {
-            return localVarFp.updateChannel(id, basicChannel, options).then((request) => request(axios, basePath));
+        updateChannel(id: string, basicChannel: BasicChannel, cid?: string, options?: any): AxiosPromise<Channel> {
+            return localVarFp.updateChannel(id, basicChannel, cid, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -760,46 +788,50 @@ export class ChannelsApi extends BaseAPI {
     /**
      * 
      * @param {BasicChannel} basicChannel 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    public createChannel(basicChannel: BasicChannel, options?: any) {
-        return ChannelsApiFp(this.configuration).createChannel(basicChannel, options).then((request) => request(this.axios, this.basePath));
+    public createChannel(basicChannel: BasicChannel, cid?: string, options?: any) {
+        return ChannelsApiFp(this.configuration).createChannel(basicChannel, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} id 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    public deleteChannel(id: string, options?: any) {
-        return ChannelsApiFp(this.configuration).deleteChannel(id, options).then((request) => request(this.axios, this.basePath));
+    public deleteChannel(id: string, cid?: string, options?: any) {
+        return ChannelsApiFp(this.configuration).deleteChannel(id, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} id 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    public getChannel(id: string, options?: any) {
-        return ChannelsApiFp(this.configuration).getChannel(id, options).then((request) => request(this.axios, this.basePath));
+    public getChannel(id: string, cid?: string, options?: any) {
+        return ChannelsApiFp(this.configuration).getChannel(id, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} id 
      * @param {BasicChannel} basicChannel 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelsApi
      */
-    public updateChannel(id: string, basicChannel: BasicChannel, options?: any) {
-        return ChannelsApiFp(this.configuration).updateChannel(id, basicChannel, options).then((request) => request(this.axios, this.basePath));
+    public updateChannel(id: string, basicChannel: BasicChannel, cid?: string, options?: any) {
+        return ChannelsApiFp(this.configuration).updateChannel(id, basicChannel, cid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -814,10 +846,11 @@ export const MessagesApiAxiosParamCreator = function (configuration?: Configurat
          * 
          * @param {BasicMessage} basicMessage 
          * @param {string} [channel] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        sendMessage: async (basicMessage: BasicMessage, channel?: string, options: any = {}): Promise<RequestArgs> => {
+        sendMessage: async (basicMessage: BasicMessage, channel?: string, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'basicMessage' is not null or undefined
             assertParamExists('sendMessage', 'basicMessage', basicMessage)
             const localVarPath = `/v1/messages`;
@@ -838,6 +871,10 @@ export const MessagesApiAxiosParamCreator = function (configuration?: Configurat
 
             if (channel !== undefined) {
                 localVarQueryParameter['channel'] = channel;
+            }
+
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
             }
 
 
@@ -868,11 +905,12 @@ export const MessagesApiFp = function(configuration?: Configuration) {
          * 
          * @param {BasicMessage} basicMessage 
          * @param {string} [channel] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.sendMessage(basicMessage, channel, options);
+        async sendMessage(basicMessage: BasicMessage, channel?: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sendMessage(basicMessage, channel, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -889,11 +927,12 @@ export const MessagesApiFactory = function (configuration?: Configuration, baseP
          * 
          * @param {BasicMessage} basicMessage 
          * @param {string} [channel] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        sendMessage(basicMessage: BasicMessage, channel?: string, options?: any): AxiosPromise<Array<Message>> {
-            return localVarFp.sendMessage(basicMessage, channel, options).then((request) => request(axios, basePath));
+        sendMessage(basicMessage: BasicMessage, channel?: string, cid?: string, options?: any): AxiosPromise<Array<Message>> {
+            return localVarFp.sendMessage(basicMessage, channel, cid, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -909,12 +948,13 @@ export class MessagesApi extends BaseAPI {
      * 
      * @param {BasicMessage} basicMessage 
      * @param {string} [channel] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    public sendMessage(basicMessage: BasicMessage, channel?: string, options?: any) {
-        return MessagesApiFp(this.configuration).sendMessage(basicMessage, channel, options).then((request) => request(this.axios, this.basePath));
+    public sendMessage(basicMessage: BasicMessage, channel?: string, cid?: string, options?: any) {
+        return MessagesApiFp(this.configuration).sendMessage(basicMessage, channel, cid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -929,10 +969,11 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
          * 
          * @param {BasicNotification} basicNotification 
          * @param {'EMAIL'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createNotification: async (basicNotification: BasicNotification, type?: 'EMAIL', options: any = {}): Promise<RequestArgs> => {
+        createNotification: async (basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'basicNotification' is not null or undefined
             assertParamExists('createNotification', 'basicNotification', basicNotification)
             const localVarPath = `/v1/notifications`;
@@ -955,6 +996,10 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
                 localVarQueryParameter['type'] = type;
             }
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -972,10 +1017,11 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNotification: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        getNotification: async (id: string, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getNotification', 'id', id)
             const localVarPath = `/v1/notifications/{id}`
@@ -994,6 +1040,10 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
             // authentication auth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
+
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
 
 
     
@@ -1020,21 +1070,23 @@ export const NotificationsApiFp = function(configuration?: Configuration) {
          * 
          * @param {BasicNotification} basicNotification 
          * @param {'EMAIL'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createNotification(basicNotification, type, options);
+        async createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createNotification(basicNotification, type, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNotification(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNotification(id, options);
+        async getNotification(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNotification(id, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1051,20 +1103,22 @@ export const NotificationsApiFactory = function (configuration?: Configuration, 
          * 
          * @param {BasicNotification} basicNotification 
          * @param {'EMAIL'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any): AxiosPromise<Notification> {
-            return localVarFp.createNotification(basicNotification, type, options).then((request) => request(axios, basePath));
+        createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<Notification> {
+            return localVarFp.createNotification(basicNotification, type, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNotification(id: string, options?: any): AxiosPromise<Notification> {
-            return localVarFp.getNotification(id, options).then((request) => request(axios, basePath));
+        getNotification(id: string, cid?: string, options?: any): AxiosPromise<Notification> {
+            return localVarFp.getNotification(id, cid, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1080,23 +1134,25 @@ export class NotificationsApi extends BaseAPI {
      * 
      * @param {BasicNotification} basicNotification 
      * @param {'EMAIL'} [type] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    public createNotification(basicNotification: BasicNotification, type?: 'EMAIL', options?: any) {
-        return NotificationsApiFp(this.configuration).createNotification(basicNotification, type, options).then((request) => request(this.axios, this.basePath));
+    public createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any) {
+        return NotificationsApiFp(this.configuration).createNotification(basicNotification, type, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} id 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    public getNotification(id: string, options?: any) {
-        return NotificationsApiFp(this.configuration).getNotification(id, options).then((request) => request(this.axios, this.basePath));
+    public getNotification(id: string, cid?: string, options?: any) {
+        return NotificationsApiFp(this.configuration).getNotification(id, cid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1111,10 +1167,11 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
          * 
          * @param {BasicNotificationTemplate} basicNotificationTemplate 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTemplate: async (basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
+        createTemplate: async (basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'basicNotificationTemplate' is not null or undefined
             assertParamExists('createTemplate', 'basicNotificationTemplate', basicNotificationTemplate)
             const localVarPath = `/v1/templates`;
@@ -1137,6 +1194,10 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
                 localVarQueryParameter['type'] = type;
             }
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -1155,10 +1216,11 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
          * 
          * @param {string} id 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteTemplate: async (id: string, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
+        deleteTemplate: async (id: string, type?: 'COMMON', cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('deleteTemplate', 'id', id)
             const localVarPath = `/v1/templates/{id}`
@@ -1182,6 +1244,10 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
                 localVarQueryParameter['type'] = type;
             }
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1199,10 +1265,11 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findTemplates: async (key?: string, page?: number, size?: number, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
+        findTemplates: async (key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/templates`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1235,6 +1302,10 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
                 localVarQueryParameter['type'] = type;
             }
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1250,10 +1321,11 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
          * 
          * @param {string} id 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTemplate: async (id: string, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
+        getTemplate: async (id: string, type?: 'COMMON', cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getTemplate', 'id', id)
             const localVarPath = `/v1/templates/{id}`
@@ -1277,6 +1349,10 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
                 localVarQueryParameter['type'] = type;
             }
 
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1293,10 +1369,11 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
          * @param {string} id 
          * @param {BasicNotificationTemplate} basicNotificationTemplate 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateTemplate: async (id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options: any = {}): Promise<RequestArgs> => {
+        updateTemplate: async (id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('updateTemplate', 'id', id)
             // verify required parameter 'basicNotificationTemplate' is not null or undefined
@@ -1320,6 +1397,10 @@ export const TemplatesApiAxiosParamCreator = function (configuration?: Configura
 
             if (type !== undefined) {
                 localVarQueryParameter['type'] = type;
+            }
+
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
             }
 
 
@@ -1350,22 +1431,24 @@ export const TemplatesApiFp = function(configuration?: Configuration) {
          * 
          * @param {BasicNotificationTemplate} basicNotificationTemplate 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createTemplate(basicNotificationTemplate, type, options);
+        async createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createTemplate(basicNotificationTemplate, type, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} id 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteTemplate(id: string, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTemplate(id, type, options);
+        async deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTemplate(id, type, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1374,22 +1457,24 @@ export const TemplatesApiFp = function(configuration?: Configuration) {
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.findTemplates(key, page, size, type, options);
+        async findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.findTemplates(key, page, size, type, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} id 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTemplate(id: string, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTemplate(id, type, options);
+        async getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTemplate(id, type, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1397,11 +1482,12 @@ export const TemplatesApiFp = function(configuration?: Configuration) {
          * @param {string} id 
          * @param {BasicNotificationTemplate} basicNotificationTemplate 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateTemplate(id, basicNotificationTemplate, type, options);
+        async updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateTemplate(id, basicNotificationTemplate, type, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1418,21 +1504,23 @@ export const TemplatesApiFactory = function (configuration?: Configuration, base
          * 
          * @param {BasicNotificationTemplate} basicNotificationTemplate 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): AxiosPromise<NotificationTemplate> {
-            return localVarFp.createTemplate(basicNotificationTemplate, type, options).then((request) => request(axios, basePath));
+        createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<NotificationTemplate> {
+            return localVarFp.createTemplate(basicNotificationTemplate, type, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteTemplate(id: string, type?: 'COMMON', options?: any): AxiosPromise<void> {
-            return localVarFp.deleteTemplate(id, type, options).then((request) => request(axios, basePath));
+        deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteTemplate(id, type, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1440,32 +1528,35 @@ export const TemplatesApiFactory = function (configuration?: Configuration, base
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any): AxiosPromise<QueryResultNotificationTemplate> {
-            return localVarFp.findTemplates(key, page, size, type, options).then((request) => request(axios, basePath));
+        findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<QueryResultNotificationTemplate> {
+            return localVarFp.findTemplates(key, page, size, type, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTemplate(id: string, type?: 'COMMON', options?: any): AxiosPromise<NotificationTemplate> {
-            return localVarFp.getTemplate(id, type, options).then((request) => request(axios, basePath));
+        getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<NotificationTemplate> {
+            return localVarFp.getTemplate(id, type, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} id 
          * @param {BasicNotificationTemplate} basicNotificationTemplate 
          * @param {'COMMON'} [type] 
+         * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any): AxiosPromise<void> {
-            return localVarFp.updateTemplate(id, basicNotificationTemplate, type, options).then((request) => request(axios, basePath));
+        updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.updateTemplate(id, basicNotificationTemplate, type, cid, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1481,24 +1572,26 @@ export class TemplatesApi extends BaseAPI {
      * 
      * @param {BasicNotificationTemplate} basicNotificationTemplate 
      * @param {'COMMON'} [type] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    public createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any) {
-        return TemplatesApiFp(this.configuration).createTemplate(basicNotificationTemplate, type, options).then((request) => request(this.axios, this.basePath));
+    public createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any) {
+        return TemplatesApiFp(this.configuration).createTemplate(basicNotificationTemplate, type, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} id 
      * @param {'COMMON'} [type] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    public deleteTemplate(id: string, type?: 'COMMON', options?: any) {
-        return TemplatesApiFp(this.configuration).deleteTemplate(id, type, options).then((request) => request(this.axios, this.basePath));
+    public deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any) {
+        return TemplatesApiFp(this.configuration).deleteTemplate(id, type, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1507,24 +1600,26 @@ export class TemplatesApi extends BaseAPI {
      * @param {number} [page] 
      * @param {number} [size] 
      * @param {'COMMON'} [type] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    public findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', options?: any) {
-        return TemplatesApiFp(this.configuration).findTemplates(key, page, size, type, options).then((request) => request(this.axios, this.basePath));
+    public findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any) {
+        return TemplatesApiFp(this.configuration).findTemplates(key, page, size, type, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} id 
      * @param {'COMMON'} [type] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    public getTemplate(id: string, type?: 'COMMON', options?: any) {
-        return TemplatesApiFp(this.configuration).getTemplate(id, type, options).then((request) => request(this.axios, this.basePath));
+    public getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any) {
+        return TemplatesApiFp(this.configuration).getTemplate(id, type, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1532,12 +1627,13 @@ export class TemplatesApi extends BaseAPI {
      * @param {string} id 
      * @param {BasicNotificationTemplate} basicNotificationTemplate 
      * @param {'COMMON'} [type] 
+     * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    public updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', options?: any) {
-        return TemplatesApiFp(this.configuration).updateTemplate(id, basicNotificationTemplate, type, options).then((request) => request(this.axios, this.basePath));
+    public updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any) {
+        return TemplatesApiFp(this.configuration).updateTemplate(id, basicNotificationTemplate, type, cid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -3,8 +3,9 @@ package plus.messenger.application.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import plus.auth.client.reactive.ReactiveAuthClient;
 import plus.auth.resources.AuthPrincipalUtil;
 import plus.auth.resources.core.AuthPrincipal;
 import plus.messenger.core.entities.BasicChannel;
@@ -27,43 +28,52 @@ public class ChannelController {
 
     @GetMapping("/{id}")
     public Mono<Channel> getChannel(@PathVariable(name = "id") String id,
-                                    AbstractOAuth2TokenAuthenticationToken principal) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return channelService.getChannel(id);
+                                    @RequestParam(name = "cid", required = false) String clientId,
+                                    ReactiveAuthClient reactiveAuthClient,
+                                    AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> channelService.getChannel(id));
     }
 
     @PostMapping()
     public Mono<Channel> createChannel(@RequestBody BasicChannel channel,
-                                       AbstractOAuth2TokenAuthenticationToken principal) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        if (authPrincipal.getUid() != null)
-            if (channel.getOwner() != null) {
-                if (!channel.getOwner().contains(authPrincipal.getUidString()))
-                    channel.getOwner().add(authPrincipal.getUidString());
-            } else {
-                channel.setOwner(Arrays.asList(authPrincipal.getUidString()));
-            }
-        channel.setId(null);
-        channel.setClientId(authPrincipal.getClientId());
-
-        Date t = new Date();
-        channel.setCreatedAt(t);
-        channel.setUpdatedAt(t);
-        return channelService.createChannel(channel);
+                                       @RequestParam(name = "cid", required = false) String clientId,
+                                       ReactiveAuthClient reactiveAuthClient,
+                                       AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> {
+                    if (StringUtils.hasText(principal.getUidString()))
+                        if (channel.getOwner() != null) {
+                            if (!channel.getOwner().contains(principal.getUidString()))
+                                channel.getOwner().add(principal.getUidString());
+                        } else {
+                            channel.setOwner(Arrays.asList(principal.getUidString()));
+                        }
+                    channel.setId(null);
+                    channel.setClientId(cid);
+                    Date t = new Date();
+                    channel.setCreatedAt(t);
+                    channel.setUpdatedAt(t);
+                    return channelService.createChannel(channel);
+                });
     }
 
     @DeleteMapping("/{id}")
     public Mono<Channel> deleteChannel(@PathVariable(name = "id") String id,
-                                       AbstractOAuth2TokenAuthenticationToken principal) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return channelService.deleteChannel(id);
+                                       @RequestParam(name = "cid", required = false) String clientId,
+                                       ReactiveAuthClient reactiveAuthClient,
+                                       AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> channelService.deleteChannel(id));
     }
 
     @PutMapping("/{id}")
     public Mono<Channel> updateChannel(@PathVariable(name = "id") String id,
                                        @RequestBody BasicChannel channel,
-                                       AbstractOAuth2TokenAuthenticationToken principal) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return channelService.updateChannel(id, channel);
+                                       @RequestParam(name = "cid", required = false) String clientId,
+                                       ReactiveAuthClient reactiveAuthClient,
+                                       AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> channelService.updateChannel(id, channel));
     }
 }

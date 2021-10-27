@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import plus.auth.client.reactive.ReactiveAuthClient;
 import plus.auth.resources.AuthPrincipalUtil;
 import plus.auth.resources.core.AuthPrincipal;
 import plus.messenger.core.entities.BasicNotificationTemplate;
@@ -39,55 +39,75 @@ public class TemplateController implements InitializingBean {
 
     @GetMapping("/{id}")
     public Mono<NotificationTemplate> getTemplate(@PathVariable String id,
-                                                  @RequestParam(name = "type", required = false, defaultValue = "COMMON")
-                                                          TemplateType templateType) {
-        return getManager(templateType).getTemplate(id);
+                                                  @RequestParam(name = "type",
+                                                          required = false,
+                                                          defaultValue = "COMMON") TemplateType templateType,
+                                                  @RequestParam(name = "cid", required = false) String clientId,
+                                                  ReactiveAuthClient reactiveAuthClient,
+                                                  AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> getManager(templateType).getTemplate(id));
     }
 
     @PostMapping("")
     public Mono<NotificationTemplate> createTemplate(@RequestBody BasicNotificationTemplate template,
-                                                     AbstractOAuth2TokenAuthenticationToken principal,
-                                                     @RequestParam(name = "type", required = false, defaultValue = "COMMON")
-                                                             TemplateType templateType) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        template.setClientId(authPrincipal.getClientId());
-        template.setOwner(authPrincipal.getUidString());
-        return getManager(templateType).createTemplate(template);
+                                                     @RequestParam(name = "type",
+                                                             required = false,
+                                                             defaultValue = "COMMON") TemplateType templateType,
+                                                     @RequestParam(name = "cid", required = false) String clientId,
+                                                     ReactiveAuthClient reactiveAuthClient,
+                                                     AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> {
+                    template.setClientId(cid);
+                    template.setOwner(principal.getUidString());
+                    return getManager(templateType).createTemplate(template);
+                });
     }
 
     @PutMapping("/{id}")
     public Mono<Void> updateTemplate(@PathVariable String id,
                                      @RequestBody BasicNotificationTemplate template,
-                                     AbstractOAuth2TokenAuthenticationToken principal,
-                                     @RequestParam(name = "type", required = false, defaultValue = "COMMON")
-                                             TemplateType templateType) {
-
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        template.setId(id);
-        template.setClientId(null);
-        template.setOwner(null);
-        return getManager(templateType).setTemplate(template);
+                                     @RequestParam(name = "type",
+                                             required = false,
+                                             defaultValue = "COMMON") TemplateType templateType,
+                                     @RequestParam(name = "cid", required = false) String clientId,
+                                     ReactiveAuthClient reactiveAuthClient,
+                                     AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> {
+                    template.setId(id);
+                    template.setClientId(null);
+                    template.setOwner(null);
+                    return getManager(templateType).setTemplate(template);
+                });
     }
 
     @DeleteMapping("/{id}")
     public Mono<Void> deleteTemplate(@PathVariable String id,
-                                     AbstractOAuth2TokenAuthenticationToken principal,
-                                     @RequestParam(name = "type", required = false, defaultValue = "COMMON")
-                                             TemplateType templateType) {
-
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return getManager(templateType).deleteTemplate(id);
+                                     @RequestParam(name = "type",
+                                             required = false,
+                                             defaultValue = "COMMON") TemplateType templateType,
+                                     @RequestParam(name = "cid", required = false) String clientId,
+                                     ReactiveAuthClient reactiveAuthClient,
+                                     AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> getManager(templateType).deleteTemplate(id));
     }
 
     @GetMapping
     public Mono<QueryResult<NotificationTemplate>> findTemplates(@RequestParam(required = false) String key,
-                                                                 @RequestParam(required = false,defaultValue = "0") int page,
-                                                                 @RequestParam(required = false,defaultValue = "10") int size,
-                                                                 AbstractOAuth2TokenAuthenticationToken principal,
-                                                                 @RequestParam(name = "type", required = false, defaultValue = "COMMON")
-                                                                         TemplateType templateType) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        return getManager(templateType).getTemplates(key, page, size, authPrincipal.getClientId(), authPrincipal.getUidString());
+                                                                 @RequestParam(required = false, defaultValue = "0") int page,
+                                                                 @RequestParam(required = false, defaultValue = "10") int size,
+                                                                 @RequestParam(name = "type",
+                                                                         required = false,
+                                                                         defaultValue = "COMMON") TemplateType templateType,
+                                                                 @RequestParam(name = "cid", required = false) String clientId,
+                                                                 ReactiveAuthClient reactiveAuthClient,
+                                                                 AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> getManager(templateType)
+                        .getTemplates(key, page, size, cid, principal.getUidString()));
     }
 
     @Override
