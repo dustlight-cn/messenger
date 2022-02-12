@@ -1,11 +1,15 @@
 package cn.dustlight.messenger.application.configurations;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import cn.dustlight.messenger.application.services.RabbitMqMessageService;
@@ -17,6 +21,7 @@ import cn.dustlight.messenger.mongo.services.MongoNotificationStore;
 import cn.dustlight.messenger.mongo.services.MongoTemplateManager;
 
 @Configuration
+@EnableConfigurationProperties(ServiceConfiguration.RabbitProperties.class)
 public class ServiceConfiguration {
 
     @Bean
@@ -32,9 +37,9 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public Exchange exchange(@Autowired ConnectionFactory factory,
+    public Exchange exchange(@Autowired RabbitProperties properties,
                              @Autowired RabbitAdmin admin) {
-        Exchange exchange = new DirectExchange("messenger",
+        Exchange exchange = new DirectExchange(properties.getExchange(),
                 true,
                 false);
         admin.declareExchange(exchange);
@@ -55,5 +60,12 @@ public class ServiceConfiguration {
                                                          @Autowired ChannelService channelService,
                                                          @Autowired RabbitAdmin rabbitAdmin) {
         return new RabbitMqMessageService(messageStore, channelService, template, rabbitAdmin);
+    }
+
+    @Getter
+    @Setter
+    @ConfigurationProperties(prefix = "dustlight.messenger.rabbit")
+    public static class RabbitProperties {
+        private String exchange = "messenger";
     }
 }

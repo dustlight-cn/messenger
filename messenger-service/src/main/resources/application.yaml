@@ -9,6 +9,13 @@ client:
 dustlight:
   messenger:
     authorization-endpoint: "https://accounts.dustlight.cn/authorize"
+    rabbit:
+      exchange: messenger
+    mongo:
+      channel-collection: channel
+      template-collection: template
+      message-collection: message
+      notification-collection: notification
   auth:
     oauth2:
       client:
@@ -21,7 +28,7 @@ dustlight:
         client-secret: ${client.secret}
         uri: ${client.checkTokenUri}
         jwk-set-uri: ${client.jwkSetUri}
-# SpringDoc 配置
+
 springdoc:
   api-docs:
     enabled: on
@@ -44,6 +51,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://username:password@localhost:27017/messenger?authSource=admin
+
 logging:
   level:
     cn.dustlight.messenger.*: debug
