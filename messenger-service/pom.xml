@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>plus.messenger</groupId>
+        <groupId>cn.dustlight.messenger</groupId>
         <artifactId>messenger-parent</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3-alpha</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>messenger-service</artifactId>
-    <description>PLUS 消息服务</description>
+    <description>消息服务</description>
 
     <dependencies>
         <dependency>
@@ -67,24 +67,24 @@
         </dependency>
 
         <dependency>
-            <groupId>plus.auth</groupId>
+            <groupId>cn.dustlight.auth</groupId>
             <artifactId>auth-resource-server-reactive</artifactId>
         </dependency>
         <dependency>
-            <groupId>plus.auth</groupId>
+            <groupId>cn.dustlight.auth</groupId>
             <artifactId>auth-client-reactive</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>plus.messenger</groupId>
+            <groupId>cn.dustlight.messenger</groupId>
             <artifactId>messenger-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>plus.messenger</groupId>
+            <groupId>cn.dustlight.messenger</groupId>
             <artifactId>messenger-mongo</artifactId>
         </dependency>
         <dependency>
-            <groupId>plus.messenger</groupId>
+            <groupId>cn.dustlight.messenger</groupId>
             <artifactId>messenger-email</artifactId>
         </dependency>
     </dependencies>

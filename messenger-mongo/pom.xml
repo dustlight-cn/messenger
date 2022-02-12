@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>plus.messenger</groupId>
+        <groupId>cn.dustlight.messenger</groupId>
         <artifactId>messenger-parent</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3-alpha</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>messenger-mongo</artifactId>
-    <description>PLUS 消息推送服务 - MongoDB 模块</description>
+    <description>消息推送服务 - MongoDB 模块</description>
 
     <properties>
         <java.version>11</java.version>
@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>plus.messenger</groupId>
+            <groupId>cn.dustlight.messenger</groupId>
             <artifactId>messenger-core</artifactId>
         </dependency>
         <dependency>

@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=plus.messenger.email.EmailNotifierConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=cn.dustlight.messenger.email.EmailNotifierConfiguration
