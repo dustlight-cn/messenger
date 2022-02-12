@@ -3,9 +3,9 @@ package plus.messenger.application.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import plus.auth.client.reactive.ReactiveAuthClient;
 import plus.auth.resources.AuthPrincipalUtil;
 import plus.auth.resources.core.AuthPrincipal;
 import plus.messenger.core.entities.BasicMessage;
@@ -26,14 +26,19 @@ public class MessageController {
     @PostMapping()
     public Flux<Message> sendMessage(@RequestBody BasicMessage message,
                                      @RequestParam(required = false) String channel,
-                                     AbstractOAuth2TokenAuthenticationToken principal) {
-        AuthPrincipal authPrincipal = AuthPrincipalUtil.getAuthPrincipal(principal);
-        message.setSender(authPrincipal.getUidString());
-        message.setClientId(authPrincipal.getClientId());
-        if (StringUtils.hasText(channel))
-            return service.sendMessage(message, channel);
-        else
-            return Flux.from(service.sendMessage(message));
+                                     @RequestParam(name = "cid", required = false) String clientId,
+                                     ReactiveAuthClient reactiveAuthClient,
+                                     AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMapMany(cid -> {
+                    if (StringUtils.hasText(principal.getUidString()))
+                        message.setSender(principal.getUidString());
+                    message.setClientId(cid);
+                    if (StringUtils.hasText(channel))
+                        return service.sendMessage(message, channel);
+                    else
+                        return Flux.from(service.sendMessage(message));
+                });
     }
 
 }
