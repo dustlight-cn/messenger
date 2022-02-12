@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-messenger-service-config
+data:
+  application.yaml: |-
+    client:
+      id: {{ .Values.config.auth.clientId | quote }}
+      secret: {{ .Values.config.auth.clientSecret | quote }}
+      apiEndpoint: {{ .Values.config.auth.apiEndpoint | quote }}
+      tokenUri: {{ .Values.config.auth.tokenUri | quote }}
+      checkTokenUri: {{ .Values.config.auth.checkTokenUri | quote }}
+      jwkSetUri: {{ .Values.config.auth.jwkSetUri | quote }}
+
+    dustlight:
+      messenger:
+        authorization-endpoint: {{ .Values.config.auth.authorizationEndpoint | quote }}
+        rabbit:
+          exchange: messenger-{{ .Release.Name }}
+        mongo:
+          channel-collection: {{ .Values.config.mongo.collection.channels | quote }}
+          template-collection: {{ .Values.config.mongo.collection.templates | quote }}
+          message-collection: {{ .Values.config.mongo.collection.messages | quote }}
+          notification-collection: {{ .Values.config.mongo.collection.notifications | quote }}
+      auth:
+        oauth2:
+          client:
+            client-id: ${client.id}
+            client-secret: ${client.secret}
+            api-endpoint: ${client.apiEndpoint}
+            token-uri: ${client.tokenUri}
+          resource-server:
+            client-id: ${client.id}
+            client-secret: ${client.secret}
+            uri: ${client.checkTokenUri}
+            jwk-set-uri: ${client.jwkSetUri}
+
+    springdoc:
+      api-docs:
+        enabled: on
+        path: /doc
+      swagger-ui:
+        path: /doc.html
+        oauth:
+          client-id: ${client.id}
+          additional-query-string-params:
+            jwt: true
+
+    spring:
+      mail:
+        host: {{ .Values.config.mail.host | quote }}
+        username: {{ .Values.config.mail.username | quote }}
+        password: {{ .Values.config.mail.password | quote }}
+      rabbitmq:
+        addresses: {{ .Values.config.rabbitmq.host | quote }}
+        port: {{ .Values.config.rabbitmq.port }}
+        username: {{ .Values.config.rabbitmq.username | quote }}
+        password: {{ .Values.config.rabbitmq.password | quote }}
+      data:
+        mongodb:
+          uri: {{ .Values.config.mongo.uri | quote }}
+
+    logging:
+      level:
+        cn.dustlight.messenger.*: {{ .Values.logging }}

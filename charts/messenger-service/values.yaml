@@ -1,0 +1,41 @@
+replicaCount: 1
+
+image:
+  repository: dustlightcn/messenger-service
+  tag: "0.0.3-alpha"
+
+ingress:
+  className: "nginx"
+  host: "messenger.dustlight.cn"
+  tls:
+    enabled: false
+    crt: ""
+    key: ""
+
+config:
+  mongo:
+    uri: ""
+    collection:
+      channels: "channel"
+      templates: "template"
+      messages: "message"
+      notifications: "notification"
+  rabbitmq:
+    host: "rabbitmq-svc"
+    port: 5672
+    username: ""
+    password: ""
+  mail:
+    host: ""
+    username: ""
+    password: ""
+  auth:
+    clientId: "test"
+    clientSecret: "e6423085f5165a58f8949e763c6691ffe44e2f86"
+    apiEndpoint: "https://api.dustlight.cn"
+    tokenUri: "https://api.dustlight.cn/v1/oauth/token"
+    checkTokenUri: "https://api.dustlight.cn/v1/token/validity"
+    jwkSetUri: "https://api.dustlight.cn/v1/jwk"
+    authorizationEndpoint: "https://accounts.dustlight.cn/authorize"
+
+logging: debug
