@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "dustlight.messenger.client")
 public class MessengerClientProperties {
 
-    private String tokenUri = "http://api.wgv/v1/jws",
-            apiEndpoint = "http://api.messenger.wgv";
+    private String tokenUri = "https://api.dustlight.cn/v1/jws",
+            apiEndpoint = "https://messenger.dustlight.cn";
     private String clientId, clientSecret;
 
 }
