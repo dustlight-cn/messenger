@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "plus.messenger.client")
+@ConfigurationProperties(prefix = "dustlight.messenger.client")
 public class MessengerClientProperties {
 
     private String tokenUri = "http://api.wgv/v1/jws",

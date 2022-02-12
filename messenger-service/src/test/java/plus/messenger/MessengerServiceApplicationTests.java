@@ -1,4 +1,4 @@
-package plus.messenger;
+package dustlight.messenger;
 
 import lombok.Getter;
 import lombok.Setter;

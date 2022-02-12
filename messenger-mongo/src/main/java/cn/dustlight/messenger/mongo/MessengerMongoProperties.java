@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "plus.messenger.mongo")
+@ConfigurationProperties(prefix = "dustlight.messenger.mongo")
 public class MessengerMongoProperties {
 
     private String channelCollection = "channel",

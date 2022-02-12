@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class MessengerClientConfiguration {
 
     @Bean
-    @ConditionalOnProperty(prefix = "plus.messenger.client", value = {"client-secret",
+    @ConditionalOnProperty(prefix = "dustlight.messenger.client", value = {"client-secret",
             "client-id"})
     public ReactiveMessengerClient reactiveMessengerClient(@Autowired MessengerClientProperties properties,
                                                            @Autowired ObjectMapper objectMapper) {
