@@ -1,0 +1,49 @@
+client:
+  id: "test"
+  secret: "e6423085f5165a58f8949e763c6691ffe44e2f86"
+  apiEndpoint: "https://api.dustlight.cn"
+  tokenUri: "https://api.dustlight.cn/v1/oauth/token"
+  checkTokenUri: "https://api.dustlight.cn/v1/token/validity"
+  jwkSetUri: "https://api.dustlight.cn/v1/jwk"
+
+dustlight:
+  messenger:
+    authorization-endpoint: "https://accounts.dustlight.cn/authorize"
+  auth:
+    oauth2:
+      client:
+        client-id: ${client.id}
+        client-secret: ${client.secret}
+        api-endpoint: ${client.apiEndpoint}
+        token-uri: ${client.tokenUri}
+      resource-server:
+        client-id: ${client.id}
+        client-secret: ${client.secret}
+        uri: ${client.checkTokenUri}
+        jwk-set-uri: ${client.jwkSetUri}
+# SpringDoc 配置
+springdoc:
+  api-docs:
+    enabled: on
+    path: /doc
+  swagger-ui:
+    path: /doc.html
+    oauth:
+      client-id: ${client.id}
+      additional-query-string-params:
+        jwt: true
+
+spring:
+  mail:
+    host: <MAIL_HOST>
+    username: <USERNAME>
+    password: <PASSWORD>
+  rabbitmq:
+    addresses: localhost
+    port: 5672
+  data:
+    mongodb:
+      uri: mongodb://username:password@localhost:27017/messenger?authSource=admin
+logging:
+  level:
+    cn.dustlight.messenger.*: debug
