@@ -1,6 +1,6 @@
 {
   "name": "@dustlight/messenger-client-axios-js",
-  "version": "0.0.3-alpha",
+  "version": "0.0.4-alpha",
   "description": "Client SDK for Messenger-Service",
   "main": "index.js",
   "scripts": {

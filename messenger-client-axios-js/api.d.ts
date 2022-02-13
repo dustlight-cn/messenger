@@ -116,12 +116,6 @@ export interface BasicMessage {
      * @type {string}
      * @memberof BasicMessage
      */
-    sentAt?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof BasicMessage
-     */
     readAt?: string;
     /**
      *
@@ -291,13 +285,13 @@ export interface Channel {
      * @type {string}
      * @memberof Channel
      */
-    updatedAt?: string;
+    createdAt?: string;
     /**
      *
      * @type {string}
      * @memberof Channel
      */
-    createdAt?: string;
+    updatedAt?: string;
 }
 /**
  *
@@ -324,12 +318,6 @@ export interface Message {
      * @type {string}
      * @memberof Message
      */
-    createdAt?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Message
-     */
     sender?: string;
     /**
      *
@@ -339,16 +327,16 @@ export interface Message {
     clientId?: string;
     /**
      *
+     * @type {string}
+     * @memberof Message
+     */
+    createdAt?: string;
+    /**
+     *
      * @type {number}
      * @memberof Message
      */
     status?: number;
-    /**
-     *
-     * @type {string}
-     * @memberof Message
-     */
-    sentAt?: string;
     /**
      *
      * @type {string}
@@ -387,12 +375,6 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    createdAt?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Notification
-     */
     sender?: string;
     /**
      *
@@ -400,12 +382,6 @@ export interface Notification {
      * @memberof Notification
      */
     clientId?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Notification
-     */
-    status?: string;
     /**
      *
      * @type {string}
@@ -424,6 +400,18 @@ export interface Notification {
      * @memberof Notification
      */
     templateId?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Notification
+     */
+    createdAt?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Notification
+     */
+    status?: string;
 }
 /**
  *
@@ -471,6 +459,44 @@ export interface NotificationTemplate {
 /**
  *
  * @export
+ * @interface QueryResultChannel
+ */
+export interface QueryResultChannel {
+    /**
+     *
+     * @type {number}
+     * @memberof QueryResultChannel
+     */
+    count?: number;
+    /**
+     *
+     * @type {Array<Channel>}
+     * @memberof QueryResultChannel
+     */
+    data?: Array<Channel>;
+}
+/**
+ *
+ * @export
+ * @interface QueryResultNotification
+ */
+export interface QueryResultNotification {
+    /**
+     *
+     * @type {number}
+     * @memberof QueryResultNotification
+     */
+    count?: number;
+    /**
+     *
+     * @type {Array<Notification>}
+     * @memberof QueryResultNotification
+     */
+    data?: Array<Notification>;
+}
+/**
+ *
+ * @export
  * @interface QueryResultNotificationTemplate
  */
 export interface QueryResultNotificationTemplate {
@@ -494,6 +520,7 @@ export interface QueryResultNotificationTemplate {
 export declare const ChannelsApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
      *
+     * @summary 创建频道
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -502,6 +529,7 @@ export declare const ChannelsApiAxiosParamCreator: (configuration?: Configuratio
     createChannel: (basicChannel: BasicChannel, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 根据 ID 删除频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -510,6 +538,18 @@ export declare const ChannelsApiAxiosParamCreator: (configuration?: Configuratio
     deleteChannel: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 查找频道
+     * @param {string} [key]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    findChannels: (key?: string, page?: number, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @summary 根据 ID 获取频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -518,6 +558,7 @@ export declare const ChannelsApiAxiosParamCreator: (configuration?: Configuratio
     getChannel: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 更新频道
      * @param {string} id
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
@@ -533,6 +574,7 @@ export declare const ChannelsApiAxiosParamCreator: (configuration?: Configuratio
 export declare const ChannelsApiFp: (configuration?: Configuration) => {
     /**
      *
+     * @summary 创建频道
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -541,6 +583,7 @@ export declare const ChannelsApiFp: (configuration?: Configuration) => {
     createChannel(basicChannel: BasicChannel, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
     /**
      *
+     * @summary 根据 ID 删除频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -549,6 +592,18 @@ export declare const ChannelsApiFp: (configuration?: Configuration) => {
     deleteChannel(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
     /**
      *
+     * @summary 查找频道
+     * @param {string} [key]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    findChannels(key?: string, page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultChannel>>;
+    /**
+     *
+     * @summary 根据 ID 获取频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -557,6 +612,7 @@ export declare const ChannelsApiFp: (configuration?: Configuration) => {
     getChannel(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>>;
     /**
      *
+     * @summary 更新频道
      * @param {string} id
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
@@ -572,6 +628,7 @@ export declare const ChannelsApiFp: (configuration?: Configuration) => {
 export declare const ChannelsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
      *
+     * @summary 创建频道
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -580,6 +637,7 @@ export declare const ChannelsApiFactory: (configuration?: Configuration, basePat
     createChannel(basicChannel: BasicChannel, cid?: string, options?: any): AxiosPromise<Channel>;
     /**
      *
+     * @summary 根据 ID 删除频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -588,6 +646,18 @@ export declare const ChannelsApiFactory: (configuration?: Configuration, basePat
     deleteChannel(id: string, cid?: string, options?: any): AxiosPromise<Channel>;
     /**
      *
+     * @summary 查找频道
+     * @param {string} [key]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    findChannels(key?: string, page?: number, size?: number, cid?: string, options?: any): AxiosPromise<QueryResultChannel>;
+    /**
+     *
+     * @summary 根据 ID 获取频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -596,6 +666,7 @@ export declare const ChannelsApiFactory: (configuration?: Configuration, basePat
     getChannel(id: string, cid?: string, options?: any): AxiosPromise<Channel>;
     /**
      *
+     * @summary 更新频道
      * @param {string} id
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
@@ -613,6 +684,7 @@ export declare const ChannelsApiFactory: (configuration?: Configuration, basePat
 export declare class ChannelsApi extends BaseAPI {
     /**
      *
+     * @summary 创建频道
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -622,6 +694,7 @@ export declare class ChannelsApi extends BaseAPI {
     createChannel(basicChannel: BasicChannel, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
     /**
      *
+     * @summary 根据 ID 删除频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -631,6 +704,19 @@ export declare class ChannelsApi extends BaseAPI {
     deleteChannel(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
     /**
      *
+     * @summary 查找频道
+     * @param {string} [key]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelsApi
+     */
+    findChannels(key?: string, page?: number, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<QueryResultChannel>>;
+    /**
+     *
+     * @summary 根据 ID 获取频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -640,6 +726,7 @@ export declare class ChannelsApi extends BaseAPI {
     getChannel(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Channel>>;
     /**
      *
+     * @summary 更新频道
      * @param {string} id
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
@@ -655,7 +742,38 @@ export declare class ChannelsApi extends BaseAPI {
  */
 export declare const MessagesApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
+     * 获取与目标的对话
+     * @summary 获取消息列表
+     * @param {string} target
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChat: (target: string, page?: number, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * 以发信者 ID 分组的最新消息列表
+     * @summary 获取最新消息列表
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatList: (page?: number, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
+    /**
      *
+     * @summary 标记消息为已读
+     * @param {Array<string>} requestBody
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    markRead: (requestBody: Array<string>, cid?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     * 如果提供了 channel 则发送给频道内所有人
+     * @summary 创建并发送消息
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
      * @param {string} [cid]
@@ -670,7 +788,38 @@ export declare const MessagesApiAxiosParamCreator: (configuration?: Configuratio
  */
 export declare const MessagesApiFp: (configuration?: Configuration) => {
     /**
+     * 获取与目标的对话
+     * @summary 获取消息列表
+     * @param {string} target
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChat(target: string, page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
+    /**
+     * 以发信者 ID 分组的最新消息列表
+     * @summary 获取最新消息列表
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatList(page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
+    /**
      *
+     * @summary 标记消息为已读
+     * @param {Array<string>} requestBody
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    markRead(requestBody: Array<string>, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     * 如果提供了 channel 则发送给频道内所有人
+     * @summary 创建并发送消息
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
      * @param {string} [cid]
@@ -685,7 +834,38 @@ export declare const MessagesApiFp: (configuration?: Configuration) => {
  */
 export declare const MessagesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
+     * 获取与目标的对话
+     * @summary 获取消息列表
+     * @param {string} target
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChat(target: string, page?: number, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>>;
+    /**
+     * 以发信者 ID 分组的最新消息列表
+     * @summary 获取最新消息列表
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatList(page?: number, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>>;
+    /**
      *
+     * @summary 标记消息为已读
+     * @param {Array<string>} requestBody
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    markRead(requestBody: Array<string>, cid?: string, options?: any): AxiosPromise<void>;
+    /**
+     * 如果提供了 channel 则发送给频道内所有人
+     * @summary 创建并发送消息
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
      * @param {string} [cid]
@@ -702,7 +882,41 @@ export declare const MessagesApiFactory: (configuration?: Configuration, basePat
  */
 export declare class MessagesApi extends BaseAPI {
     /**
+     * 获取与目标的对话
+     * @summary 获取消息列表
+     * @param {string} target
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MessagesApi
+     */
+    getChat(target: string, page?: number, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
+    /**
+     * 以发信者 ID 分组的最新消息列表
+     * @summary 获取最新消息列表
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MessagesApi
+     */
+    getChatList(page?: number, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
+    /**
      *
+     * @summary 标记消息为已读
+     * @param {Array<string>} requestBody
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MessagesApi
+     */
+    markRead(requestBody: Array<string>, cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     * 如果提供了 channel 则发送给频道内所有人
+     * @summary 创建并发送消息
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
      * @param {string} [cid]
@@ -719,6 +933,7 @@ export declare class MessagesApi extends BaseAPI {
 export declare const NotificationsApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
      *
+     * @summary 创建并发送通知
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
      * @param {string} [cid]
@@ -728,12 +943,34 @@ export declare const NotificationsApiAxiosParamCreator: (configuration?: Configu
     createNotification: (basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 根据 ID 删除通知记录
+     * @param {string} id
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNotification: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @summary 根据 ID 获取通知记录
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getNotification: (id: string, cid?: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @summary 列出通知列表
+     * @param {string} [templateId]
+     * @param {string} [channelId]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotification: (templateId?: string, channelId?: string, page?: number, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * NotificationsApi - functional programming interface
@@ -742,6 +979,7 @@ export declare const NotificationsApiAxiosParamCreator: (configuration?: Configu
 export declare const NotificationsApiFp: (configuration?: Configuration) => {
     /**
      *
+     * @summary 创建并发送通知
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
      * @param {string} [cid]
@@ -751,12 +989,34 @@ export declare const NotificationsApiFp: (configuration?: Configuration) => {
     createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>>;
     /**
      *
+     * @summary 根据 ID 删除通知记录
+     * @param {string} id
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNotification(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     *
+     * @summary 根据 ID 获取通知记录
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getNotification(id: string, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Notification>>;
+    /**
+     *
+     * @summary 列出通知列表
+     * @param {string} [templateId]
+     * @param {string} [channelId]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotification(templateId?: string, channelId?: string, page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotification>>;
 };
 /**
  * NotificationsApi - factory interface
@@ -765,6 +1025,7 @@ export declare const NotificationsApiFp: (configuration?: Configuration) => {
 export declare const NotificationsApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
      *
+     * @summary 创建并发送通知
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
      * @param {string} [cid]
@@ -774,12 +1035,34 @@ export declare const NotificationsApiFactory: (configuration?: Configuration, ba
     createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<Notification>;
     /**
      *
+     * @summary 根据 ID 删除通知记录
+     * @param {string} id
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNotification(id: string, cid?: string, options?: any): AxiosPromise<void>;
+    /**
+     *
+     * @summary 根据 ID 获取通知记录
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getNotification(id: string, cid?: string, options?: any): AxiosPromise<Notification>;
+    /**
+     *
+     * @summary 列出通知列表
+     * @param {string} [templateId]
+     * @param {string} [channelId]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listNotification(templateId?: string, channelId?: string, page?: number, size?: number, cid?: string, options?: any): AxiosPromise<QueryResultNotification>;
 };
 /**
  * NotificationsApi - object-oriented interface
@@ -790,6 +1073,7 @@ export declare const NotificationsApiFactory: (configuration?: Configuration, ba
 export declare class NotificationsApi extends BaseAPI {
     /**
      *
+     * @summary 创建并发送通知
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
      * @param {string} [cid]
@@ -800,6 +1084,17 @@ export declare class NotificationsApi extends BaseAPI {
     createNotification(basicNotification: BasicNotification, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<Notification>>;
     /**
      *
+     * @summary 根据 ID 删除通知记录
+     * @param {string} id
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotificationsApi
+     */
+    deleteNotification(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     *
+     * @summary 根据 ID 获取通知记录
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -807,6 +1102,19 @@ export declare class NotificationsApi extends BaseAPI {
      * @memberof NotificationsApi
      */
     getNotification(id: string, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Notification>>;
+    /**
+     *
+     * @summary 列出通知列表
+     * @param {string} [templateId]
+     * @param {string} [channelId]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotificationsApi
+     */
+    listNotification(templateId?: string, channelId?: string, page?: number, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<QueryResultNotification>>;
 }
 /**
  * TemplatesApi - axios parameter creator
@@ -815,52 +1123,57 @@ export declare class NotificationsApi extends BaseAPI {
 export declare const TemplatesApiAxiosParamCreator: (configuration?: Configuration) => {
     /**
      *
+     * @summary 创建模板
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createTemplate: (basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
+    createTemplate: (basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 根据 ID 删除模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTemplate: (id: string, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
+    deleteTemplate: (id: string, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 查找模板
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    findTemplates: (key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
+    findTemplates: (key?: string, page?: number, size?: number, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 根据 ID 获取模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getTemplate: (id: string, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
+    getTemplate: (id: string, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @summary 根据 ID 更新模板
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateTemplate: (id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any) => Promise<RequestArgs>;
+    updateTemplate: (id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any) => Promise<RequestArgs>;
 };
 /**
  * TemplatesApi - functional programming interface
@@ -869,52 +1182,57 @@ export declare const TemplatesApiAxiosParamCreator: (configuration?: Configurati
 export declare const TemplatesApiFp: (configuration?: Configuration) => {
     /**
      *
+     * @summary 创建模板
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
+    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
     /**
      *
+     * @summary 根据 ID 删除模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    deleteTemplate(id: string, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
+     * @summary 查找模板
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>>;
+    findTemplates(key?: string, page?: number, size?: number, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QueryResultNotificationTemplate>>;
     /**
      *
+     * @summary 根据 ID 获取模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
+    getTemplate(id: string, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NotificationTemplate>>;
     /**
      *
+     * @summary 根据 ID 更新模板
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
 };
 /**
  * TemplatesApi - factory interface
@@ -923,52 +1241,57 @@ export declare const TemplatesApiFp: (configuration?: Configuration) => {
 export declare const TemplatesApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
     /**
      *
+     * @summary 创建模板
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<NotificationTemplate>;
+    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<NotificationTemplate>;
     /**
      *
+     * @summary 根据 ID 删除模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<void>;
+    deleteTemplate(id: string, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<void>;
     /**
      *
+     * @summary 查找模板
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<QueryResultNotificationTemplate>;
+    findTemplates(key?: string, page?: number, size?: number, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<QueryResultNotificationTemplate>;
     /**
      *
+     * @summary 根据 ID 获取模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<NotificationTemplate>;
+    getTemplate(id: string, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<NotificationTemplate>;
     /**
      *
+     * @summary 根据 ID 更新模板
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): AxiosPromise<void>;
+    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any): AxiosPromise<void>;
 };
 /**
  * TemplatesApi - object-oriented interface
@@ -979,55 +1302,60 @@ export declare const TemplatesApiFactory: (configuration?: Configuration, basePa
 export declare class TemplatesApi extends BaseAPI {
     /**
      *
+     * @summary 创建模板
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
+    createTemplate(basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
     /**
      *
+     * @summary 根据 ID 删除模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    deleteTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    deleteTemplate(id: string, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
+     * @summary 查找模板
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    findTemplates(key?: string, page?: number, size?: number, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<QueryResultNotificationTemplate>>;
+    findTemplates(key?: string, page?: number, size?: number, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<QueryResultNotificationTemplate>>;
     /**
      *
+     * @summary 根据 ID 获取模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    getTemplate(id: string, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
+    getTemplate(id: string, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<NotificationTemplate>>;
     /**
      *
+     * @summary 根据 ID 更新模板
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TemplatesApi
      */
-    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'COMMON', cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    updateTemplate(id: string, basicNotificationTemplate: BasicNotificationTemplate, type?: 'EMAIL', cid?: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
 }

@@ -40,6 +40,7 @@ const ChannelsApiAxiosParamCreator = function (configuration) {
     return {
         /**
          *
+         * @summary 创建频道
          * @param {BasicChannel} basicChannel
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -76,6 +77,7 @@ const ChannelsApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 根据 ID 删除频道
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -111,6 +113,51 @@ const ChannelsApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 查找频道
+         * @param {string} [key]
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        findChannels: (key, page, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/v1/channels`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: 'GET' }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication auth required
+            // oauth required
+            yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
+            if (key !== undefined) {
+                localVarQueryParameter['key'] = key;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @summary 根据 ID 获取频道
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -146,6 +193,7 @@ const ChannelsApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 更新频道
          * @param {string} id
          * @param {BasicChannel} basicChannel
          * @param {string} [cid]
@@ -196,6 +244,7 @@ const ChannelsApiFp = function (configuration) {
     return {
         /**
          *
+         * @summary 创建频道
          * @param {BasicChannel} basicChannel
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -209,6 +258,7 @@ const ChannelsApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 根据 ID 删除频道
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -222,6 +272,23 @@ const ChannelsApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 查找频道
+         * @param {string} [key]
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        findChannels(key, page, size, cid, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.findChannels(key, page, size, cid, options);
+                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @summary 根据 ID 获取频道
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -235,6 +302,7 @@ const ChannelsApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 更新频道
          * @param {string} id
          * @param {BasicChannel} basicChannel
          * @param {string} [cid]
@@ -259,6 +327,7 @@ const ChannelsApiFactory = function (configuration, basePath, axios) {
     return {
         /**
          *
+         * @summary 创建频道
          * @param {BasicChannel} basicChannel
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -269,6 +338,7 @@ const ChannelsApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 根据 ID 删除频道
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -279,6 +349,20 @@ const ChannelsApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 查找频道
+         * @param {string} [key]
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        findChannels(key, page, size, cid, options) {
+            return localVarFp.findChannels(key, page, size, cid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @summary 根据 ID 获取频道
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -289,6 +373,7 @@ const ChannelsApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 更新频道
          * @param {string} id
          * @param {BasicChannel} basicChannel
          * @param {string} [cid]
@@ -310,6 +395,7 @@ exports.ChannelsApiFactory = ChannelsApiFactory;
 class ChannelsApi extends base_1.BaseAPI {
     /**
      *
+     * @summary 创建频道
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -321,6 +407,7 @@ class ChannelsApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 根据 ID 删除频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -332,6 +419,21 @@ class ChannelsApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 查找频道
+     * @param {string} [key]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelsApi
+     */
+    findChannels(key, page, size, cid, options) {
+        return (0, exports.ChannelsApiFp)(this.configuration).findChannels(key, page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @summary 根据 ID 获取频道
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -343,6 +445,7 @@ class ChannelsApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 更新频道
      * @param {string} id
      * @param {BasicChannel} basicChannel
      * @param {string} [cid]
@@ -362,7 +465,129 @@ exports.ChannelsApi = ChannelsApi;
 const MessagesApiAxiosParamCreator = function (configuration) {
     return {
         /**
+         * 获取与目标的对话
+         * @summary 获取消息列表
+         * @param {string} target
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChat: (target, page, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'target' is not null or undefined
+            (0, common_1.assertParamExists)('getChat', 'target', target);
+            const localVarPath = `/v1/chat/{target}`
+                .replace(`{${"target"}}`, encodeURIComponent(String(target)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: 'GET' }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication auth required
+            // oauth required
+            yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         * 以发信者 ID 分组的最新消息列表
+         * @summary 获取最新消息列表
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChatList: (page, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/v1/chat-list`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: 'GET' }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication auth required
+            // oauth required
+            yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
          *
+         * @summary 标记消息为已读
+         * @param {Array<string>} requestBody
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        markRead: (requestBody, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'requestBody' is not null or undefined
+            (0, common_1.assertParamExists)('markRead', 'requestBody', requestBody);
+            const localVarPath = `/v1/messages/read`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: 'POST' }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication auth required
+            // oauth required
+            yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(requestBody, localVarRequestOptions, configuration);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         * 如果提供了 channel 则发送给频道内所有人
+         * @summary 创建并发送消息
          * @param {BasicMessage} basicMessage
          * @param {string} [channel]
          * @param {string} [cid]
@@ -412,7 +637,53 @@ const MessagesApiFp = function (configuration) {
     const localVarAxiosParamCreator = (0, exports.MessagesApiAxiosParamCreator)(configuration);
     return {
         /**
+         * 获取与目标的对话
+         * @summary 获取消息列表
+         * @param {string} target
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChat(target, page, size, cid, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getChat(target, page, size, cid, options);
+                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         * 以发信者 ID 分组的最新消息列表
+         * @summary 获取最新消息列表
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChatList(page, size, cid, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getChatList(page, size, cid, options);
+                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
          *
+         * @summary 标记消息为已读
+         * @param {Array<string>} requestBody
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        markRead(requestBody, cid, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.markRead(requestBody, cid, options);
+                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         * 如果提供了 channel 则发送给频道内所有人
+         * @summary 创建并发送消息
          * @param {BasicMessage} basicMessage
          * @param {string} [channel]
          * @param {string} [cid]
@@ -436,7 +707,44 @@ const MessagesApiFactory = function (configuration, basePath, axios) {
     const localVarFp = (0, exports.MessagesApiFp)(configuration);
     return {
         /**
+         * 获取与目标的对话
+         * @summary 获取消息列表
+         * @param {string} target
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChat(target, page, size, cid, options) {
+            return localVarFp.getChat(target, page, size, cid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 以发信者 ID 分组的最新消息列表
+         * @summary 获取最新消息列表
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChatList(page, size, cid, options) {
+            return localVarFp.getChatList(page, size, cid, options).then((request) => request(axios, basePath));
+        },
+        /**
          *
+         * @summary 标记消息为已读
+         * @param {Array<string>} requestBody
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        markRead(requestBody, cid, options) {
+            return localVarFp.markRead(requestBody, cid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 如果提供了 channel 则发送给频道内所有人
+         * @summary 创建并发送消息
          * @param {BasicMessage} basicMessage
          * @param {string} [channel]
          * @param {string} [cid]
@@ -457,7 +765,47 @@ exports.MessagesApiFactory = MessagesApiFactory;
  */
 class MessagesApi extends base_1.BaseAPI {
     /**
+     * 获取与目标的对话
+     * @summary 获取消息列表
+     * @param {string} target
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MessagesApi
+     */
+    getChat(target, page, size, cid, options) {
+        return (0, exports.MessagesApiFp)(this.configuration).getChat(target, page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 以发信者 ID 分组的最新消息列表
+     * @summary 获取最新消息列表
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MessagesApi
+     */
+    getChatList(page, size, cid, options) {
+        return (0, exports.MessagesApiFp)(this.configuration).getChatList(page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
      *
+     * @summary 标记消息为已读
+     * @param {Array<string>} requestBody
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MessagesApi
+     */
+    markRead(requestBody, cid, options) {
+        return (0, exports.MessagesApiFp)(this.configuration).markRead(requestBody, cid, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 如果提供了 channel 则发送给频道内所有人
+     * @summary 创建并发送消息
      * @param {BasicMessage} basicMessage
      * @param {string} [channel]
      * @param {string} [cid]
@@ -478,6 +826,7 @@ const NotificationsApiAxiosParamCreator = function (configuration) {
     return {
         /**
          *
+         * @summary 创建并发送通知
          * @param {BasicNotification} basicNotification
          * @param {'EMAIL'} [type]
          * @param {string} [cid]
@@ -518,6 +867,43 @@ const NotificationsApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 根据 ID 删除通知记录
+         * @param {string} id
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNotification: (id, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'id' is not null or undefined
+            (0, common_1.assertParamExists)('deleteNotification', 'id', id);
+            const localVarPath = `/v1/notifications/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: 'DELETE' }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication auth required
+            // oauth required
+            yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @summary 根据 ID 获取通知记录
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -551,6 +937,54 @@ const NotificationsApiAxiosParamCreator = function (configuration) {
                 options: localVarRequestOptions,
             };
         }),
+        /**
+         *
+         * @summary 列出通知列表
+         * @param {string} [templateId]
+         * @param {string} [channelId]
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotification: (templateId, channelId, page, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/v1/notifications`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: 'GET' }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication auth required
+            // oauth required
+            yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
+            if (templateId !== undefined) {
+                localVarQueryParameter['templateId'] = templateId;
+            }
+            if (channelId !== undefined) {
+                localVarQueryParameter['channelId'] = channelId;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+            if (cid !== undefined) {
+                localVarQueryParameter['cid'] = cid;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
     };
 };
 exports.NotificationsApiAxiosParamCreator = NotificationsApiAxiosParamCreator;
@@ -563,6 +997,7 @@ const NotificationsApiFp = function (configuration) {
     return {
         /**
          *
+         * @summary 创建并发送通知
          * @param {BasicNotification} basicNotification
          * @param {'EMAIL'} [type]
          * @param {string} [cid]
@@ -577,6 +1012,21 @@ const NotificationsApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 根据 ID 删除通知记录
+         * @param {string} id
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNotification(id, cid, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.deleteNotification(id, cid, options);
+                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @summary 根据 ID 获取通知记录
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -585,6 +1035,23 @@ const NotificationsApiFp = function (configuration) {
         getNotification(id, cid, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.getNotification(id, cid, options);
+                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @summary 列出通知列表
+         * @param {string} [templateId]
+         * @param {string} [channelId]
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotification(templateId, channelId, page, size, cid, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.listNotification(templateId, channelId, page, size, cid, options);
                 return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -600,6 +1067,7 @@ const NotificationsApiFactory = function (configuration, basePath, axios) {
     return {
         /**
          *
+         * @summary 创建并发送通知
          * @param {BasicNotification} basicNotification
          * @param {'EMAIL'} [type]
          * @param {string} [cid]
@@ -611,6 +1079,18 @@ const NotificationsApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 根据 ID 删除通知记录
+         * @param {string} id
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNotification(id, cid, options) {
+            return localVarFp.deleteNotification(id, cid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @summary 根据 ID 获取通知记录
          * @param {string} id
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
@@ -618,6 +1098,20 @@ const NotificationsApiFactory = function (configuration, basePath, axios) {
          */
         getNotification(id, cid, options) {
             return localVarFp.getNotification(id, cid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @summary 列出通知列表
+         * @param {string} [templateId]
+         * @param {string} [channelId]
+         * @param {number} [page]
+         * @param {number} [size]
+         * @param {string} [cid]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listNotification(templateId, channelId, page, size, cid, options) {
+            return localVarFp.listNotification(templateId, channelId, page, size, cid, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -631,6 +1125,7 @@ exports.NotificationsApiFactory = NotificationsApiFactory;
 class NotificationsApi extends base_1.BaseAPI {
     /**
      *
+     * @summary 创建并发送通知
      * @param {BasicNotification} basicNotification
      * @param {'EMAIL'} [type]
      * @param {string} [cid]
@@ -643,6 +1138,19 @@ class NotificationsApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 根据 ID 删除通知记录
+     * @param {string} id
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotificationsApi
+     */
+    deleteNotification(id, cid, options) {
+        return (0, exports.NotificationsApiFp)(this.configuration).deleteNotification(id, cid, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @summary 根据 ID 获取通知记录
      * @param {string} id
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
@@ -651,6 +1159,21 @@ class NotificationsApi extends base_1.BaseAPI {
      */
     getNotification(id, cid, options) {
         return (0, exports.NotificationsApiFp)(this.configuration).getNotification(id, cid, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @summary 列出通知列表
+     * @param {string} [templateId]
+     * @param {string} [channelId]
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [cid]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NotificationsApi
+     */
+    listNotification(templateId, channelId, page, size, cid, options) {
+        return (0, exports.NotificationsApiFp)(this.configuration).listNotification(templateId, channelId, page, size, cid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 exports.NotificationsApi = NotificationsApi;
@@ -662,8 +1185,9 @@ const TemplatesApiAxiosParamCreator = function (configuration) {
     return {
         /**
          *
+         * @summary 创建模板
          * @param {BasicNotificationTemplate} basicNotificationTemplate
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -702,8 +1226,9 @@ const TemplatesApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 根据 ID 删除模板
          * @param {string} id
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -741,10 +1266,11 @@ const TemplatesApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 查找模板
          * @param {string} [key]
          * @param {number} [page]
          * @param {number} [size]
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -788,8 +1314,9 @@ const TemplatesApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 根据 ID 获取模板
          * @param {string} id
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -827,9 +1354,10 @@ const TemplatesApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @summary 根据 ID 更新模板
          * @param {string} id
          * @param {BasicNotificationTemplate} basicNotificationTemplate
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -881,8 +1409,9 @@ const TemplatesApiFp = function (configuration) {
     return {
         /**
          *
+         * @summary 创建模板
          * @param {BasicNotificationTemplate} basicNotificationTemplate
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -895,8 +1424,9 @@ const TemplatesApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 根据 ID 删除模板
          * @param {string} id
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -909,10 +1439,11 @@ const TemplatesApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 查找模板
          * @param {string} [key]
          * @param {number} [page]
          * @param {number} [size]
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -925,8 +1456,9 @@ const TemplatesApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 根据 ID 获取模板
          * @param {string} id
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -939,9 +1471,10 @@ const TemplatesApiFp = function (configuration) {
         },
         /**
          *
+         * @summary 根据 ID 更新模板
          * @param {string} id
          * @param {BasicNotificationTemplate} basicNotificationTemplate
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -964,8 +1497,9 @@ const TemplatesApiFactory = function (configuration, basePath, axios) {
     return {
         /**
          *
+         * @summary 创建模板
          * @param {BasicNotificationTemplate} basicNotificationTemplate
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -975,8 +1509,9 @@ const TemplatesApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 根据 ID 删除模板
          * @param {string} id
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -986,10 +1521,11 @@ const TemplatesApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 查找模板
          * @param {string} [key]
          * @param {number} [page]
          * @param {number} [size]
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -999,8 +1535,9 @@ const TemplatesApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 根据 ID 获取模板
          * @param {string} id
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1010,9 +1547,10 @@ const TemplatesApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @summary 根据 ID 更新模板
          * @param {string} id
          * @param {BasicNotificationTemplate} basicNotificationTemplate
-         * @param {'COMMON'} [type]
+         * @param {'EMAIL'} [type]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1032,8 +1570,9 @@ exports.TemplatesApiFactory = TemplatesApiFactory;
 class TemplatesApi extends base_1.BaseAPI {
     /**
      *
+     * @summary 创建模板
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1044,8 +1583,9 @@ class TemplatesApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 根据 ID 删除模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1056,10 +1596,11 @@ class TemplatesApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 查找模板
      * @param {string} [key]
      * @param {number} [page]
      * @param {number} [size]
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1070,8 +1611,9 @@ class TemplatesApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 根据 ID 获取模板
      * @param {string} id
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1082,9 +1624,10 @@ class TemplatesApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @summary 根据 ID 更新模板
      * @param {string} id
      * @param {BasicNotificationTemplate} basicNotificationTemplate
-     * @param {'COMMON'} [type]
+     * @param {'EMAIL'} [type]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

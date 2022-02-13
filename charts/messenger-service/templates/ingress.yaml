@@ -4,6 +4,9 @@ metadata:
   name: {{ .Release.Name }}-messenger-service
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
   {{ if .Values.ingress.tls.enabled }}
   tls:
