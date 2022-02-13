@@ -46,7 +46,7 @@ public class TemplateController implements InitializingBean {
                                                   ReactiveAuthClient reactiveAuthClient,
                                                   AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMap(cid -> getManager(templateType).getTemplate(id));
+                .flatMap(cid -> getManager(templateType).getTemplate(id, cid));
     }
 
     @PostMapping("")
@@ -92,7 +92,7 @@ public class TemplateController implements InitializingBean {
                                      ReactiveAuthClient reactiveAuthClient,
                                      AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMap(cid -> getManager(templateType).deleteTemplate(id));
+                .flatMap(cid -> getManager(templateType).deleteTemplate(id, cid));
     }
 
     @GetMapping

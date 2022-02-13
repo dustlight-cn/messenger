@@ -58,7 +58,7 @@ public class NotificationController implements InitializingBean {
                                               ReactiveAuthClient reactiveAuthClient,
                                               AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMap(cid -> emailNotificationService.get(id));
+                .flatMap(cid -> emailNotificationService.get(id, cid));
     }
 
     @Override

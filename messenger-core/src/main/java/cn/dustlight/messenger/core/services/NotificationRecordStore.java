@@ -7,8 +7,8 @@ public interface NotificationRecordStore<T extends Notification> {
 
     Mono<T> store(T notification);
 
-    Mono<T> get(String id);
+    Mono<T> get(String id, String clientId);
 
-    Mono<Void> remove(String id);
+    Mono<Void> remove(String id, String clientId);
 
 }

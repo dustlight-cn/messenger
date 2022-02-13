@@ -30,9 +30,11 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
     private String collectionName;
 
     @Override
-    public Mono<T> getTemplate(String id) {
+    public Mono<T> getTemplate(String id, String clientId) {
         return operations.findById(id, getEntitiesClass(), collectionName)
-                .switchIfEmpty(Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException()));
+                .switchIfEmpty(Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException()))
+                .flatMap(template -> clientId.equals(template.getClientId()) ?
+                        Mono.just(template) : Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException()));
     }
 
     @Override
@@ -42,8 +44,8 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
     }
 
     @Override
-    public Mono<Void> deleteTemplate(String id) {
-        return operations.findAndRemove(Query.query(where("_id").is(id)), getEntitiesClass(), collectionName)
+    public Mono<Void> deleteTemplate(String id, String clientId) {
+        return operations.findAndRemove(Query.query(where("_id").is(id).and("clientId").is(clientId)), getEntitiesClass(), collectionName)
                 .onErrorMap(throwable -> ErrorEnum.DELETE_TEMPLATE_FAILED.details(throwable).getException())
                 .flatMap(t -> {
                     if (t == null)
@@ -60,17 +62,15 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
         BasicNotificationTemplate t = new BasicNotificationTemplate();
         if (template.getContent() != null)
             u.set("content", t.getContent());
-        if (template.getContent() != null)
-            u.set("name", t.getContent());
-        if (template.getContent() != null)
-            u.set("content", t.getContent());
-        if (template.getContent() != null)
-            u.set("status", t.getContent());
+        if (template.getName() != null)
+            u.set("name", t.getName());
+        if (template.getStatus() != null)
+            u.set("status", t.getStatus());
         u.set("updatedAt", new Date());
-        return operations.findAndModify(Query.query(where("_id").is(template.getId())),
-                u,
-                getEntitiesClass(),
-                collectionName)
+        return operations.findAndModify(Query.query(where("_id").is(template.getId()).and("clientId").is(template.getClientId())),
+                        u,
+                        getEntitiesClass(),
+                        collectionName)
                 .onErrorMap(throwable -> ErrorEnum.UPDATE_TEMPLATE_FAILED.details(throwable).getException())
                 .switchIfEmpty(Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException()))
                 .then();

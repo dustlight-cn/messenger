@@ -26,18 +26,17 @@ public abstract class MongoNotificationStore<T extends Notification> implements 
     }
 
     @Override
-    public Mono<T> get(String id) {
-        return operations.findById(id, getEntitiesClass(), collectionName);
+    public Mono<T> get(String id, String clientId) {
+        return operations.findById(id, getEntitiesClass(), collectionName)
+                .switchIfEmpty(Mono.error(ErrorEnum.RESOURCE_NOT_FOUND.getException()))
+                .flatMap(notification -> clientId.equals(notification.getClientId()) ? Mono.just(notification) : Mono.error(ErrorEnum.RESOURCE_NOT_FOUND.getException()));
     }
 
     @Override
-    public Mono<Void> remove(String id) {
-        return operations.findAndRemove(Query.query(where("_id").is(id)),getEntitiesClass(),collectionName)
-                .flatMap(n -> {
-                    if(n == null)
-                        return Mono.error(ErrorEnum.DELETE_RESOURCE_FAILED.getException());
-                    return Mono.empty();
-                });
+    public Mono<Void> remove(String id, String clientId) {
+        return operations.findAndRemove(Query.query(where("_id").is(id).and("clientId").is(clientId)), getEntitiesClass(), collectionName)
+                .switchIfEmpty(Mono.error(ErrorEnum.RESOURCE_NOT_FOUND.getException()))
+                .then();
     }
 
     protected abstract Class<T> getEntitiesClass();

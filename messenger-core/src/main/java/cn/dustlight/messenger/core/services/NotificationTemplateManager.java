@@ -6,11 +6,11 @@ import reactor.core.publisher.Mono;
 
 public interface NotificationTemplateManager<T extends NotificationTemplate> {
 
-    Mono<T> getTemplate(String id);
+    Mono<T> getTemplate(String id,String clientId);
 
     Mono<T> createTemplate(T origin);
 
-    Mono<Void> deleteTemplate(String id);
+    Mono<Void> deleteTemplate(String id,String clientId);
 
     Mono<Void> setTemplate(T template);
 

@@ -32,15 +32,15 @@ public class DefaultNotificationService<T extends Notification, V extends Notifi
         Date time = new Date();
         notification.setCreatedAt(time);
         return templateManager
-                .getTemplate(notification.getTemplateId())
+                .getTemplate(notification.getTemplateId(), notification.getClientId())
                 .flatMap(template -> this.sendNotification(notification, template)
                         .flatMap(t -> store.store(t))
                 );
     }
 
     @Override
-    public Mono<V> getTemplate(String id) {
-        return templateManager.getTemplate(id);
+    public Mono<V> getTemplate(String id, String clientId) {
+        return templateManager.getTemplate(id, clientId);
     }
 
     @Override
@@ -49,8 +49,8 @@ public class DefaultNotificationService<T extends Notification, V extends Notifi
     }
 
     @Override
-    public Mono<Void> deleteTemplate(String id) {
-        return templateManager.deleteTemplate(id);
+    public Mono<Void> deleteTemplate(String id, String clientId) {
+        return templateManager.deleteTemplate(id, clientId);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class DefaultNotificationService<T extends Notification, V extends Notifi
     }
 
     @Override
-    public Mono<T> get(String id) {
-        return store.get(id);
+    public Mono<T> get(String id, String clientId) {
+        return store.get(id, clientId);
     }
 
     @Override
-    public Mono<Void> remove(String id) {
-        return store.remove(id);
+    public Mono<Void> remove(String id, String clientId) {
+        return store.remove(id, clientId);
     }
 }
