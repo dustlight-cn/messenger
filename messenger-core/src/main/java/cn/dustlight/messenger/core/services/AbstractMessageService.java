@@ -32,7 +32,6 @@ public abstract class AbstractMessageService<C extends Channel> implements Messa
             return Mono.error(ErrorEnum.CREATE_RESOURCE_FAILED.details("Receiver is empty!").getException());
         message.setId(null);
         message.setCreatedAt(new Date());
-        message.setSentAt(null);
         message.setReadAt(null);
         return messageStore.store(message).flatMap(m -> doSend(m));
     }

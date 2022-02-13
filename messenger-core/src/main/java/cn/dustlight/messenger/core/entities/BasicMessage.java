@@ -16,7 +16,7 @@ public class BasicMessage implements Message {
 
     private Map<String, Object> content;
 
-    private Date createdAt, sentAt, readAt;
+    private Date createdAt, readAt;
 
     private Integer status;
 

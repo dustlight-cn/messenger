@@ -20,8 +20,6 @@ public interface Message extends Serializable {
 
     Date getCreatedAt();
 
-    Date getSentAt();
-
     Date getReadAt();
 
     void setId(String id);
@@ -37,8 +35,6 @@ public interface Message extends Serializable {
     void setStatus(Integer status);
 
     void setCreatedAt(Date createdAt);
-
-    void setSentAt(Date sentAt);
 
     void setReadAt(Date readAt);
 

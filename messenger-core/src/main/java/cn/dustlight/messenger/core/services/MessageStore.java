@@ -1,6 +1,7 @@
 package cn.dustlight.messenger.core.services;
 
 import cn.dustlight.messenger.core.entities.Message;
+import cn.dustlight.messenger.core.entities.QueryResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -12,13 +13,17 @@ public interface MessageStore<T extends Message> {
 
     Flux<T> store(Collection<T> messages);
 
-    Mono<T> getOne(String messageId,String clientId);
+    Mono<T> getOne(String messageId, String clientId);
 
-    Flux<T> get(Collection<String> messageIds,String clientId);
+    Mono<Void> markRead(String clientId, Collection<String> ids, String receiver);
+
+    Flux<T> get(Collection<String> messageIds, String clientId);
 
     Mono<T> update(T message);
 
-    Flux<T> update(Collection<String> messageIds, T update,String clientId);
+    Flux<T> update(Collection<String> messageIds, T update, String clientId);
 
-    Flux<T> getUnread(String clientId, String receiver);
+    Mono<QueryResult<T>> getChat(String clientId, String user, String target, int page, int size);
+
+    Flux<T> getChatList(String clientId, String user, int page, int size);
 }

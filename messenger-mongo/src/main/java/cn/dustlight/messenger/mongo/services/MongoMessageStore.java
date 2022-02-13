@@ -1,9 +1,14 @@
 package cn.dustlight.messenger.mongo.services;
 
+import cn.dustlight.messenger.core.ErrorEnum;
+import cn.dustlight.messenger.core.entities.QueryResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -13,6 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -45,8 +51,6 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
             u.set("readAt", update.getReadAt());
         if (update.getSender() != null)
             u.set("sender", update.getSender());
-        if (update.getSentAt() != null)
-            u.set("sentAt", update.getSentAt());
         if (update.getStatus() != null)
             u.set("status", update.getStatus());
         return operations.findAndModify(Query.query(Criteria.where("_id").is(update.getId())), u, getEntitiesClass(), collectionName);
@@ -63,8 +67,6 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
             u.set("readAt", update.getReadAt());
         if (update.getSender() != null)
             u.set("sender", update.getSender());
-        if (update.getSentAt() != null)
-            u.set("sentAt", update.getSentAt());
         if (update.getStatus() != null)
             u.set("status", update.getStatus());
         return operations.updateMulti(Query.query(Criteria.where("_id").in(messageIds).and("clientId").is(clientId)), u, getEntitiesClass(), collectionName)
@@ -78,11 +80,13 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     }
 
     @Override
-    public Flux<T> getUnread(String clientId, String receiver) {
-        return operations.find(Query.query(Criteria.where("clientId").is(clientId)
-                        .and("receiver").is(receiver)
-                        .and("sentAt").is(null)),
-                getEntitiesClass(), collectionName);
+    public Mono<Void> markRead(String clientId, Collection<String> ids, String receiver) {
+        Query query = Query.query(Criteria.where("clientId").is(clientId).and("receiver").is(receiver).and("_id").in(ids));
+        Update update = new Update();
+        update.set("readAt", new Date());
+        return operations.updateMulti(query, update, collectionName)
+                .onErrorMap(e -> ErrorEnum.UPDATE_RESOURCE_FAILED.details(e).getException())
+                .then();
     }
 
     @Override
@@ -90,5 +94,31 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
         return operations.find(Query.query(Criteria.where("_id").in(messageIds).and("clientId").is(clientId)),
                 getEntitiesClass(),
                 collectionName);
+    }
+
+    @Override
+    public Mono<QueryResult<T>> getChat(String clientId, String user, String target, int page, int size) {
+        Query query = Query.query(Criteria.where("clientId").is(clientId)
+                .orOperator(Criteria.where("sender").is(user).and("receiver").is(target),
+                        Criteria.where("sender").is(target).and("receiver").is(user)));
+        return operations.count(query, collectionName)
+                .flatMap(c -> operations.find(query.with(Pageable.ofSize(size).withPage(page)).with(Sort.by(Sort.Order.desc("createdAt"))),
+                                getEntitiesClass(),
+                                collectionName)
+                        .collectList()
+                        .map(msgs -> new QueryResult<>(c, msgs)));
+    }
+
+    @Override
+    public Flux<T> getChatList(String clientId, String user, int page, int size) {
+        Aggregation aggs = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("clientId").is(clientId).and("receiver").is(user)),
+                Aggregation.sort(Sort.by(Sort.Order.desc("createdAt"))),
+                Aggregation.group("$sender").first("$$ROOT").as("doc"),
+                Aggregation.skip(page * size),
+                Aggregation.limit(size),
+                Aggregation.replaceRoot("$doc")
+        );
+        return operations.aggregate(aggs, collectionName, getEntitiesClass());
     }
 }

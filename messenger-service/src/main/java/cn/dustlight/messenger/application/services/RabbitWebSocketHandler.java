@@ -19,8 +19,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.List;
 
 public class RabbitWebSocketHandler extends AbstractWebsocketHandler {
 
@@ -99,23 +97,7 @@ public class RabbitWebSocketHandler extends AbstractWebsocketHandler {
                 BasicMessage basicMessage = null;
                 try {
                     basicMessage = objectMapper.readValue(r_message.getBody(), BasicMessage.class);
-                    basicMessage.setSentAt(new Date());
-
-                    BasicMessage update = new BasicMessage();
-                    update.setId(basicMessage.getId());
-                    update.setSentAt(basicMessage.getSentAt());
-                    BasicMessage finalBasicMessage = basicMessage;
-
-                    messageStore.update(update)
-                            .doOnError(throwable -> emitter.error((Throwable) throwable))
-                            .subscribe(m -> {
-                                try {
-                                    emitter.next(session.textMessage(objectMapper.writeValueAsString(finalBasicMessage)));
-                                } catch (Throwable e) {
-                                    emitter.error(e);
-                                }
-
-                            });
+                    emitter.next(session.textMessage(objectMapper.writeValueAsString(basicMessage)));
                 } catch (Throwable e) {
                     emitter.error(e);
                 }
@@ -123,34 +105,6 @@ public class RabbitWebSocketHandler extends AbstractWebsocketHandler {
             });
             emitter.onRequest(value -> {
                 simpleMessageListenerContainer.start();
-                messageStore.getUnread(principal.getClientId(),principal.getUidString())
-                        .collectList()
-                        .subscribe(tmp -> {
-                            List<BasicMessage> messages = (List<BasicMessage>) tmp;
-                            for(BasicMessage message : messages){
-                                try {
-                                    message.setSentAt(new Date());
-
-                                    BasicMessage update = new BasicMessage();
-                                    update.setId(message.getId());
-                                    update.setSentAt(message.getSentAt());
-                                    BasicMessage finalBasicMessage = message;
-
-                                    messageStore.update(update)
-                                            .doOnError(throwable -> emitter.error((Throwable) throwable))
-                                            .subscribe(m -> {
-                                                try {
-                                                    emitter.next(session.textMessage(objectMapper.writeValueAsString(finalBasicMessage)));
-                                                } catch (Throwable e) {
-                                                    emitter.error(e);
-                                                }
-                                            });
-
-                                } catch (Throwable e) {
-                                    emitter.error(e);
-                                }
-                            }
-                        });
             });
             emitter.onDispose(() -> {
                 simpleMessageListenerContainer.stop();
