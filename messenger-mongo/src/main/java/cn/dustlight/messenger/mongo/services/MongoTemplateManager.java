@@ -78,34 +78,20 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
 
     @Override
     public Mono<QueryResult<T>> getTemplates(String key, int page, int size, String clientId, String owner) {
-
-        return StringUtils.hasText(key) ?
-                operations.count(Query.query(TextCriteria.forDefaultLanguage().matching(key))
-                                .addCriteria(where("clientId").is(clientId)
-                                        .and("owner").is(owner)),
+        Query query = Query.query(where("clientId").is(clientId)
+                .and("owner").is(owner));
+        if (StringUtils.hasText(key))
+            query.addCriteria(TextCriteria.forDefaultLanguage().matching(key));
+        query.fields().exclude("content");
+        return operations.count(query,
                         getEntitiesClass(),
                         collectionName)
-                        .flatMap(c -> operations.find(Query.query(TextCriteria.forDefaultLanguage().matching(key))
-                                        .addCriteria(where("clientId").is(clientId)
-                                                .and("owner").is(owner))
-                                        .with(Pageable.ofSize(size).withPage(page)),
+                .flatMap(c -> operations.find(query.with(Pageable.ofSize(size).withPage(page)),
                                 getEntitiesClass(),
                                 collectionName)
-                                .collectList()
-                                .map(templates -> new QueryResult<>(c, templates))
-                        ) :
-                operations.count(Query.query(where("clientId").is(clientId)
-                                .and("owner").is(owner)),
-                        getEntitiesClass(),
-                        collectionName)
-                        .flatMap(c -> operations.find(Query.query(where("clientId").is(clientId)
-                                        .and("owner").is(owner))
-                                        .with(Pageable.ofSize(size).withPage(page)),
-                                getEntitiesClass(),
-                                collectionName)
-                                .collectList()
-                                .map(templates -> new QueryResult<>(c, templates))
-                        );
+                        .collectList()
+                        .map(templates -> new QueryResult<>(c, templates))
+                );
     }
 
     protected abstract Class<T> getEntitiesClass();
