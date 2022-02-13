@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.application.controllers;
 
+import cn.dustlight.messenger.core.entities.QueryResult;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +76,16 @@ public class ChannelController {
                                        AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> channelService.updateChannel(id, channel));
+    }
+
+    @GetMapping()
+    public Mono<QueryResult<Channel>> findChannels(@RequestParam(name = "key", required = false) String key,
+                                                   @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                   @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+                                                   @RequestParam(name = "cid", required = false) String clientId,
+                                                   ReactiveAuthClient reactiveAuthClient,
+                                                   AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> channelService.findChannel(key, page, size, cid, principal.getUidString()));
     }
 }

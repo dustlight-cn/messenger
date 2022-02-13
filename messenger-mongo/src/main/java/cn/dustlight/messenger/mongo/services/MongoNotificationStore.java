@@ -35,7 +35,7 @@ public abstract class MongoNotificationStore<T extends Notification> implements 
         return operations.findAndRemove(Query.query(where("_id").is(id)),getEntitiesClass(),collectionName)
                 .flatMap(n -> {
                     if(n == null)
-                        return Mono.error(ErrorEnum.UNKNOWN.getException());
+                        return Mono.error(ErrorEnum.DELETE_RESOURCE_FAILED.getException());
                     return Mono.empty();
                 });
     }

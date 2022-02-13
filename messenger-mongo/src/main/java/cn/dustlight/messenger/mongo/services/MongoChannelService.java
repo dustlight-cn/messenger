@@ -4,12 +4,15 @@ import cn.dustlight.messenger.core.entities.QueryResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import cn.dustlight.messenger.core.ErrorEnum;
 import cn.dustlight.messenger.core.entities.Channel;
 import cn.dustlight.messenger.core.services.ChannelService;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
@@ -69,11 +72,16 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
 
     @Override
     public Mono<QueryResult<T>> findChannel(String key, int page, int size, String clientId, String user) {
-//        return operations.find(Query.query(),
-//                getEntitiesClass(),
-//                collectionName)
-//                .onErrorMap(e->ErrorEnum.CHANNEL_NOT_FOUND.details(e));
-        return Mono.empty();
+        Query query = Query.query(where("clientId").is(clientId).orOperator(where("owner").in(user),where("member").in(user)));
+        if (StringUtils.hasText(key))
+            query.addCriteria(TextCriteria.forDefaultLanguage().matching(key));
+        return operations.count(query,
+                        getEntitiesClass(),
+                        collectionName)
+                .flatMap(count -> operations.find(query.with(Pageable.ofSize(size).withPage(page)), getEntitiesClass(), collectionName)
+                        .collectList()
+                        .map(results -> new QueryResult<>(count, results)))
+                .onErrorMap(e -> ErrorEnum.CHANNEL_NOT_FOUND.details(e).getException());
     }
 
     protected abstract Class<T> getEntitiesClass();
