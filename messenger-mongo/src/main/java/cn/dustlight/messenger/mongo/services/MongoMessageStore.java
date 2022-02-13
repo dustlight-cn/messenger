@@ -37,14 +37,10 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     @Override
     public Mono<T> update(T update) {
         Update u = new Update();
-        if (update.getClientId() != null)
-            u.set("clientId", update.getClientId());
         if (update.getReceiver() != null)
             u.set("receiver", update.getReceiver());
         if (update.getContent() != null)
             u.set("content", update.getContent());
-        if (update.getCreatedAt() != null)
-            u.set("createdAt", update.getCreatedAt());
         if (update.getReadAt() != null)
             u.set("readAt", update.getReadAt());
         if (update.getSender() != null)
@@ -57,16 +53,12 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     }
 
     @Override
-    public Flux<T> update(Collection<String> messageIds, T update) {
+    public Flux<T> update(Collection<String> messageIds, T update, String clientId) {
         Update u = new Update();
-        if (update.getClientId() != null)
-            u.set("clientId", update.getClientId());
         if (update.getReceiver() != null)
             u.set("receiver", update.getReceiver());
         if (update.getContent() != null)
             u.set("content", update.getContent());
-        if (update.getCreatedAt() != null)
-            u.set("createdAt", update.getCreatedAt());
         if (update.getReadAt() != null)
             u.set("readAt", update.getReadAt());
         if (update.getSender() != null)
@@ -75,15 +67,14 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
             u.set("sentAt", update.getSentAt());
         if (update.getStatus() != null)
             u.set("status", update.getStatus());
-
-        return operations.updateMulti(Query.query(Criteria.where("_id").in(messageIds)), u, getEntitiesClass(), collectionName)
+        return operations.updateMulti(Query.query(Criteria.where("_id").in(messageIds).and("clientId").is(clientId)), u, getEntitiesClass(), collectionName)
                 .flux()
                 .flatMap(updateResult -> operations.find(Query.query(Criteria.where("_id").in(messageIds)), getEntitiesClass(), collectionName));
     }
 
     @Override
-    public Mono<T> getOne(String messageId) {
-        return operations.findById(messageId, getEntitiesClass(), collectionName);
+    public Mono<T> getOne(String messageId, String clientId) {
+        return operations.findOne(Query.query(Criteria.where("_id").is(messageId).and("clientId").is(clientId)), getEntitiesClass(), collectionName);
     }
 
     @Override
@@ -95,8 +86,8 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     }
 
     @Override
-    public Flux<T> get(Collection<String> messageIds) {
-        return operations.find(Query.query(Criteria.where("_id").in(messageIds)),
+    public Flux<T> get(Collection<String> messageIds, String clientId) {
+        return operations.find(Query.query(Criteria.where("_id").in(messageIds).and("clientId").is(clientId)),
                 getEntitiesClass(),
                 collectionName);
     }
