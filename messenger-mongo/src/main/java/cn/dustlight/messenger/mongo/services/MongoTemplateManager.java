@@ -38,13 +38,13 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
     @Override
     public Mono<T> createTemplate(T origin) {
         return operations.save(origin,collectionName)
-                .onErrorMap(throwable -> ErrorEnum.CREATE_TEMPLATE_FAILED.details(throwable.getMessage()).getException());
+                .onErrorMap(throwable -> ErrorEnum.CREATE_TEMPLATE_FAILED.details(throwable).getException());
     }
 
     @Override
     public Mono<Void> deleteTemplate(String id) {
         return operations.findAndRemove(Query.query(where("_id").is(id)), getEntitiesClass(), collectionName)
-                .onErrorMap(throwable -> ErrorEnum.DELETE_TEMPLATE_FAILED.details(throwable.getMessage()).getException())
+                .onErrorMap(throwable -> ErrorEnum.DELETE_TEMPLATE_FAILED.details(throwable).getException())
                 .flatMap(t -> {
                     if (t == null)
                         return Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException());
@@ -71,7 +71,7 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
                 u,
                 getEntitiesClass(),
                 collectionName)
-                .onErrorMap(throwable -> ErrorEnum.UPDATE_TEMPLATE_FAILED.details(throwable.getMessage()).getException())
+                .onErrorMap(throwable -> ErrorEnum.UPDATE_TEMPLATE_FAILED.details(throwable).getException())
                 .switchIfEmpty(Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException()))
                 .then();
     }

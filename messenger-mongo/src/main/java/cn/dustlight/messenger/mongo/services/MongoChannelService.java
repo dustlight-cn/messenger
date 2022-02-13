@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.mongo.services;
 
+import cn.dustlight.messenger.core.entities.QueryResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +51,7 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
                 update,
                 getEntitiesClass(),
                 collectionName)
-                .onErrorMap(throwable -> ErrorEnum.UPDATE_CHANNEL_FAILED.details(throwable.getMessage()).getException())
+                .onErrorMap(throwable -> ErrorEnum.UPDATE_CHANNEL_FAILED.details(throwable).getException())
                 .switchIfEmpty(Mono.error(ErrorEnum.CHANNEL_NOT_FOUND.getException()))
                 .then();
     }
@@ -58,12 +59,21 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
     @Override
     public Mono<Void> deleteChannel(String channelId) {
         return operations.findAndRemove(Query.query(where("_id").is(channelId)), getEntitiesClass(), collectionName)
-                .onErrorMap(throwable -> ErrorEnum.DELETE_CHANNEL_FAILED.details(throwable.getMessage()).getException())
+                .onErrorMap(throwable -> ErrorEnum.DELETE_CHANNEL_FAILED.details(throwable).getException())
                 .flatMap(t -> {
                     if (t == null)
                         return Mono.error(ErrorEnum.CHANNEL_NOT_FOUND.getException());
                     return Mono.empty();
                 });
+    }
+
+    @Override
+    public Mono<QueryResult<T>> findChannel(String key, int page, int size, String clientId, String user) {
+//        return operations.find(Query.query(),
+//                getEntitiesClass(),
+//                collectionName)
+//                .onErrorMap(e->ErrorEnum.CHANNEL_NOT_FOUND.details(e));
+        return Mono.empty();
     }
 
     protected abstract Class<T> getEntitiesClass();
