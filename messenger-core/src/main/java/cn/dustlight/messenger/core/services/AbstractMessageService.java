@@ -47,6 +47,8 @@ public abstract class AbstractMessageService<C extends Channel> implements Messa
                         targets.addAll(c.getMembers());
                     if (targets.size() == 0)
                         return Mono.error(ErrorEnum.CREATE_RESOURCE_FAILED.details("Message target is empty!").getException());
+                    if (StringUtils.hasText(message.getSender()) && targets.contains(message.getSender()))
+                        return Mono.error(ErrorEnum.ACCESS_DENIED.details("User is not channel member or owner!").getException());
                     Collection<BasicMessage> basicMessages = new HashSet<>(targets.size());
                     for (String receiver : targets) {
                         BasicMessage msg = new BasicMessage();
