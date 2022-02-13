@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.core.services;
 
+import cn.dustlight.messenger.core.ErrorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,19 +24,20 @@ public class DefaultNotificationService<T extends Notification, V extends Notifi
 
     @Override
     public Mono<T> sendNotification(T notification, V template) {
-        return notifier.sendNotification(notification, template);
+        return notifier.sendNotification(notification, template)
+                .onErrorMap(e -> ErrorEnum.CREATE_RESOURCE_FAILED.details(e).getException());
     }
 
     public Mono<T> sendNotification(T notification) {
         notification.setStatus(null);
         notification.setId(null);
+        notification.setSentAt(null);
         Date time = new Date();
         notification.setCreatedAt(time);
         return templateManager
                 .getTemplate(notification.getTemplateId(), notification.getClientId())
-                .flatMap(template -> this.sendNotification(notification, template)
-                        .flatMap(t -> store.store(t))
-                );
+                .flatMap(template -> this.sendNotification(notification, template))
+                .flatMap(t -> store.store(t));
     }
 
     @Override
@@ -76,5 +78,10 @@ public class DefaultNotificationService<T extends Notification, V extends Notifi
     @Override
     public Mono<Void> remove(String id, String clientId) {
         return store.remove(id, clientId);
+    }
+
+    @Override
+    public Mono<QueryResult<T>> list(String clientId, String templateId, String channelId, int page, int size) {
+        return store.list(clientId, templateId, channelId, page, size);
     }
 }

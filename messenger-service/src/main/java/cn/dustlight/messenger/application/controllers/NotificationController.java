@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.application.controllers;
 
+import cn.dustlight.messenger.core.entities.QueryResult;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.InitializingBean;
@@ -36,18 +37,34 @@ public class NotificationController implements InitializingBean {
         return notifierMap.get(notificationType);
     }
 
+    @GetMapping("")
+    public Mono<QueryResult<Notification>> listNotification(@RequestParam(name = "templateId", required = false) String templateId,
+                                                            @RequestParam(name = "channelId", required = false) String channelId,
+                                                            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                                            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                                            @RequestParam(name = "cid", required = false) String clientId,
+                                                            ReactiveAuthClient reactiveAuthClient,
+                                                            AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> emailNotificationService.list(cid, templateId, channelId, page, size));
+    }
+
     @PostMapping("")
-    public Mono<Notification> createNotification(
-            @RequestParam(required = false, name = "type", defaultValue = "EMAIL") NotificationType type,
-            @RequestBody BasicNotification notification,
-            @RequestParam(name = "cid", required = false) String clientId,
-            ReactiveAuthClient reactiveAuthClient,
-            AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+    public Mono<Notification> createNotification(@RequestParam(required = false, name = "type", defaultValue = "EMAIL") NotificationType type,
+                                                 @RequestBody BasicNotification notification,
+                                                 @RequestParam(name = "cid", required = false) String clientId,
+                                                 ReactiveAuthClient reactiveAuthClient,
+                                                 AuthPrincipal principal) {
+        Mono<String> mono = StringUtils.hasText(principal.getUidString()) ?
+                AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
+                : Mono.just(principal.getClientId());
+        return mono
                 .flatMap(cid -> {
                     notification.setClientId(cid);
                     if (StringUtils.hasText(principal.getUidString()))
                         notification.setSender(principal.getUidString());
+                    else
+                        notification.setSender(null);
                     return getManager(type).sendNotification(notification);
                 });
     }
@@ -57,8 +74,17 @@ public class NotificationController implements InitializingBean {
                                               @RequestParam(name = "cid", required = false) String clientId,
                                               ReactiveAuthClient reactiveAuthClient,
                                               AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> emailNotificationService.get(id, cid));
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteNotification(@PathVariable String id,
+                                         @RequestParam(name = "cid", required = false) String clientId,
+                                         ReactiveAuthClient reactiveAuthClient,
+                                         AuthPrincipal principal) {
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
+                .flatMap(cid -> emailNotificationService.remove(id, cid));
     }
 
     @Override

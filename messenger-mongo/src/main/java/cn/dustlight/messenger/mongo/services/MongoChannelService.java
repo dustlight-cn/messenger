@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
@@ -32,7 +31,7 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
     public Mono<T> getChannel(String channelId, String clientId) {
         return operations.findById(channelId, getEntitiesClass(), collectionName)
                 .switchIfEmpty(Mono.error(ErrorEnum.UNKNOWN.getException()))
-                .flatMap(channel -> channelId.equals(channel.getClientId()) ?
+                .flatMap(channel -> clientId.equals(channel.getClientId()) ?
                         Mono.just(channel) : Mono.error(ErrorEnum.CHANNEL_NOT_FOUND.getException()));
     }
 

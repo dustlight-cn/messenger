@@ -1,6 +1,7 @@
 package cn.dustlight.messenger.core.services;
 
 import cn.dustlight.messenger.core.entities.Notification;
+import cn.dustlight.messenger.core.entities.QueryResult;
 import reactor.core.publisher.Mono;
 
 public interface NotificationRecordStore<T extends Notification> {
@@ -11,4 +12,5 @@ public interface NotificationRecordStore<T extends Notification> {
 
     Mono<Void> remove(String id, String clientId);
 
+    Mono<QueryResult<T>> list(String clientId, String templateId, String channelId, int page, int size);
 }
