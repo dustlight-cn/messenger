@@ -43,7 +43,7 @@ public class TemplateController implements InitializingBean {
     public Mono<NotificationTemplate> getTemplate(@PathVariable String id,
                                                   @RequestParam(name = "type",
                                                           required = false,
-                                                          defaultValue = "COMMON") TemplateType templateType,
+                                                          defaultValue = "EMAIL") TemplateType templateType,
                                                   @RequestParam(name = "cid", required = false) String clientId,
                                                   ReactiveAuthClient reactiveAuthClient,
                                                   AuthPrincipal principal) {
@@ -56,7 +56,7 @@ public class TemplateController implements InitializingBean {
     public Mono<NotificationTemplate> createTemplate(@RequestBody BasicNotificationTemplate template,
                                                      @RequestParam(name = "type",
                                                              required = false,
-                                                             defaultValue = "COMMON") TemplateType templateType,
+                                                             defaultValue = "EMAIL") TemplateType templateType,
                                                      @RequestParam(name = "cid", required = false) String clientId,
                                                      ReactiveAuthClient reactiveAuthClient,
                                                      AuthPrincipal principal) {
@@ -75,7 +75,7 @@ public class TemplateController implements InitializingBean {
                                      @RequestBody BasicNotificationTemplate template,
                                      @RequestParam(name = "type",
                                              required = false,
-                                             defaultValue = "COMMON") TemplateType templateType,
+                                             defaultValue = "EMAIL") TemplateType templateType,
                                      @RequestParam(name = "cid", required = false) String clientId,
                                      ReactiveAuthClient reactiveAuthClient,
                                      AuthPrincipal principal) {
@@ -94,7 +94,7 @@ public class TemplateController implements InitializingBean {
     public Mono<Void> deleteTemplate(@PathVariable String id,
                                      @RequestParam(name = "type",
                                              required = false,
-                                             defaultValue = "COMMON") TemplateType templateType,
+                                             defaultValue = "EMAIL") TemplateType templateType,
                                      @RequestParam(name = "cid", required = false) String clientId,
                                      ReactiveAuthClient reactiveAuthClient,
                                      AuthPrincipal principal) {
@@ -109,7 +109,7 @@ public class TemplateController implements InitializingBean {
                                                                  @RequestParam(required = false, defaultValue = "10") int size,
                                                                  @RequestParam(name = "type",
                                                                          required = false,
-                                                                         defaultValue = "COMMON") TemplateType templateType,
+                                                                         defaultValue = "EMAIL") TemplateType templateType,
                                                                  @RequestParam(name = "cid", required = false) String clientId,
                                                                  ReactiveAuthClient reactiveAuthClient,
                                                                  AuthPrincipal principal) {
