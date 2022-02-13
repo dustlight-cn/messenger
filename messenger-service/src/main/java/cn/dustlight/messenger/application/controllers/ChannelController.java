@@ -33,7 +33,7 @@ public class ChannelController {
                                     ReactiveAuthClient reactiveAuthClient,
                                     AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMap(cid -> channelService.getChannel(id));
+                .flatMap(cid -> channelService.getChannel(id, cid));
     }
 
     @PostMapping()
@@ -65,7 +65,7 @@ public class ChannelController {
                                        ReactiveAuthClient reactiveAuthClient,
                                        AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMap(cid -> channelService.deleteChannel(id));
+                .flatMap(cid -> channelService.deleteChannel(id, cid));
     }
 
     @PutMapping("/{id}")
@@ -75,7 +75,12 @@ public class ChannelController {
                                        ReactiveAuthClient reactiveAuthClient,
                                        AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMap(cid -> channelService.updateChannel(id, channel));
+                .flatMap(cid -> {
+                    channel.setClientId(cid);
+                    Date t = new Date();
+                    channel.setUpdatedAt(t);
+                    return channelService.updateChannel(id, channel, principal.getUidString());
+                });
     }
 
     @GetMapping()

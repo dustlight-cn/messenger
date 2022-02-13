@@ -25,15 +25,15 @@ public abstract class AbstractNotifier<T extends Notification, V extends Notific
 
     @Override
     public Mono<T> sendNotification(T notification, V template) {
-        return channelService.getChannel(notification.getChannelId()).flatMap(
+        return channelService.getChannel(notification.getChannelId(), notification.getClientId()).flatMap(
                 c -> {
                     Channel channel = (Channel) c;
                     HashSet<String> targets = new HashSet<>();
-                    if(channel.getMembers() != null)
+                    if (channel.getMembers() != null)
                         targets.addAll(channel.getMembers());
-                    if(channel.getOwner() != null)
+                    if (channel.getOwner() != null)
                         targets.addAll(channel.getOwner());
-                    if(targets.size() == 0)
+                    if (targets.size() == 0)
                         return Mono.just(false);
                     Long[] userIds = new Long[targets.size()];
                     int i = 0;

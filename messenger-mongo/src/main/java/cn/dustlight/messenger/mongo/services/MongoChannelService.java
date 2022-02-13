@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
@@ -28,9 +29,11 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
     private String collectionName;
 
     @Override
-    public Mono<T> getChannel(String channelId) {
-        return operations.findById(channelId,getEntitiesClass(),collectionName)
-                .switchIfEmpty(Mono.error(ErrorEnum.UNKNOWN.getException()));
+    public Mono<T> getChannel(String channelId, String clientId) {
+        return operations.findById(channelId, getEntitiesClass(), collectionName)
+                .switchIfEmpty(Mono.error(ErrorEnum.UNKNOWN.getException()))
+                .flatMap(channel -> channelId.equals(channel.getClientId()) ?
+                        Mono.just(channel) : Mono.error(ErrorEnum.CHANNEL_NOT_FOUND.getException()));
     }
 
     @Override
@@ -39,29 +42,29 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
     }
 
     @Override
-    public Mono<Void> updateChannel(String channelId, T channel) {
+    public Mono<Void> updateChannel(String channelId, T channel, String user) {
         Update update = new Update();
-        if(channel.getOwner() != null)
+        if (channel.getOwner() != null)
             update.set("owner", channel.getOwner());
-        if(channel.getMembers() != null)
+        if (channel.getMembers() != null)
             update.set("member", channel.getMembers());
-        if(channel.getDescription() != null)
+        if (channel.getDescription() != null)
             update.set("description", channel.getDescription());
-        if(channel.getName() != null)
+        if (channel.getName() != null)
             update.set("name", channel.getName());
-        update.set("updatedAt",new Date());
-        return operations.findAndModify(Query.query(where("_id").is(channelId)),
-                update,
-                getEntitiesClass(),
-                collectionName)
+        update.set("updatedAt", new Date());
+        return operations.findAndModify(Query.query(where("_id").is(channelId).and("clientId").is(channel.getClientId()).and("owner").in(user)),
+                        update,
+                        getEntitiesClass(),
+                        collectionName)
                 .onErrorMap(throwable -> ErrorEnum.UPDATE_CHANNEL_FAILED.details(throwable).getException())
                 .switchIfEmpty(Mono.error(ErrorEnum.CHANNEL_NOT_FOUND.getException()))
                 .then();
     }
 
     @Override
-    public Mono<Void> deleteChannel(String channelId) {
-        return operations.findAndRemove(Query.query(where("_id").is(channelId)), getEntitiesClass(), collectionName)
+    public Mono<Void> deleteChannel(String channelId, String clientId) {
+        return operations.findAndRemove(Query.query(where("_id").is(channelId).and("clientId").is(clientId)), getEntitiesClass(), collectionName)
                 .onErrorMap(throwable -> ErrorEnum.DELETE_CHANNEL_FAILED.details(throwable).getException())
                 .flatMap(t -> {
                     if (t == null)

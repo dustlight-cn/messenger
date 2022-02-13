@@ -6,13 +6,13 @@ import reactor.core.publisher.Mono;
 
 public interface ChannelService<T extends Channel> {
 
-    Mono<T> getChannel(String channelId);
+    Mono<T> getChannel(String channelId,String clientId);
 
     Mono<T> createChannel(T channel);
 
-    Mono<Void> updateChannel(String channelId, T channel);
+    Mono<Void> updateChannel(String channelId, T channel,String user);
 
-    Mono<Void> deleteChannel(String channelId);
+    Mono<Void> deleteChannel(String channelId,String clientId);
 
     Mono<QueryResult<T>> findChannel(String key,
                                      int page,

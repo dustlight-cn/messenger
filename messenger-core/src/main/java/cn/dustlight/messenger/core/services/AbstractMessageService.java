@@ -33,7 +33,7 @@ public abstract class AbstractMessageService<C extends Channel> implements Messa
 
     @Override
     public Flux<BasicMessage> sendMessage(BasicMessage message, String channelId) {
-        return channelService.getChannel(channelId)
+        return channelService.getChannel(channelId,message.getClientId())
                 .flux()
                 .flatMap(c -> {
                     HashSet<String> targets = new HashSet<>();
