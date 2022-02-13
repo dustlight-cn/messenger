@@ -1,6 +1,7 @@
 package cn.dustlight.messenger.application.controllers;
 
 import cn.dustlight.messenger.core.entities.QueryResult;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.InitializingBean;
@@ -37,6 +38,7 @@ public class NotificationController implements InitializingBean {
         return notifierMap.get(notificationType);
     }
 
+    @Operation(summary = "列出通知列表", description = "")
     @GetMapping("")
     public Mono<QueryResult<Notification>> listNotification(@RequestParam(name = "templateId", required = false) String templateId,
                                                             @RequestParam(name = "channelId", required = false) String channelId,
@@ -49,6 +51,7 @@ public class NotificationController implements InitializingBean {
                 .flatMap(cid -> emailNotificationService.list(cid, templateId, channelId, page, size));
     }
 
+    @Operation(summary = "创建并发送通知", description = "")
     @PostMapping("")
     public Mono<Notification> createNotification(@RequestParam(required = false, name = "type", defaultValue = "EMAIL") NotificationType type,
                                                  @RequestBody BasicNotification notification,
@@ -69,6 +72,7 @@ public class NotificationController implements InitializingBean {
                 });
     }
 
+    @Operation(summary = "根据 ID 获取通知记录", description = "")
     @GetMapping("/{id}")
     public Mono<Notification> getNotification(@PathVariable String id,
                                               @RequestParam(name = "cid", required = false) String clientId,
@@ -78,6 +82,7 @@ public class NotificationController implements InitializingBean {
                 .flatMap(cid -> emailNotificationService.get(id, cid));
     }
 
+    @Operation(summary = "根据 ID 删除通知记录", description = "")
     @DeleteMapping("/{id}")
     public Mono<Void> deleteNotification(@PathVariable String id,
                                          @RequestParam(name = "cid", required = false) String clientId,

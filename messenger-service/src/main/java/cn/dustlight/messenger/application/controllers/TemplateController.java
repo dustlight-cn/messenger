@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.application.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.InitializingBean;
@@ -37,6 +38,7 @@ public class TemplateController implements InitializingBean {
         return managerMap.get(templateType);
     }
 
+    @Operation(summary = "根据 ID 获取模板", description = "")
     @GetMapping("/{id}")
     public Mono<NotificationTemplate> getTemplate(@PathVariable String id,
                                                   @RequestParam(name = "type",
@@ -49,6 +51,7 @@ public class TemplateController implements InitializingBean {
                 .flatMap(cid -> getManager(templateType).getTemplate(id, cid));
     }
 
+    @Operation(summary = "创建模板", description = "")
     @PostMapping("")
     public Mono<NotificationTemplate> createTemplate(@RequestBody BasicNotificationTemplate template,
                                                      @RequestParam(name = "type",
@@ -61,10 +64,12 @@ public class TemplateController implements InitializingBean {
                 .flatMap(cid -> {
                     template.setClientId(cid);
                     template.setOwner(principal.getUidString());
+                    template.setStatus(null);
                     return getManager(templateType).createTemplate(template);
                 });
     }
 
+    @Operation(summary = "根据 ID 更新模板", description = "")
     @PutMapping("/{id}")
     public Mono<Void> updateTemplate(@PathVariable String id,
                                      @RequestBody BasicNotificationTemplate template,
@@ -77,12 +82,14 @@ public class TemplateController implements InitializingBean {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> {
                     template.setId(id);
-                    template.setClientId(null);
+                    template.setClientId(cid);
                     template.setOwner(null);
+                    template.setStatus(null);
                     return getManager(templateType).setTemplate(template);
                 });
     }
 
+    @Operation(summary = "根据 ID 删除模板", description = "")
     @DeleteMapping("/{id}")
     public Mono<Void> deleteTemplate(@PathVariable String id,
                                      @RequestParam(name = "type",
@@ -95,6 +102,7 @@ public class TemplateController implements InitializingBean {
                 .flatMap(cid -> getManager(templateType).deleteTemplate(id, cid));
     }
 
+    @Operation(summary = "查找模板", description = "")
     @GetMapping
     public Mono<QueryResult<NotificationTemplate>> findTemplates(@RequestParam(required = false) String key,
                                                                  @RequestParam(required = false, defaultValue = "0") int page,
@@ -112,10 +120,10 @@ public class TemplateController implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        managerMap.put(TemplateType.COMMON, mongoTemplateManager);
+        managerMap.put(TemplateType.EMAIL, mongoTemplateManager);
     }
 
     public enum TemplateType {
-        COMMON
+        EMAIL
     }
 }

@@ -1,6 +1,7 @@
 package cn.dustlight.messenger.application.controllers;
 
 import cn.dustlight.messenger.core.entities.QueryResult;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class ChannelController {
     @Autowired
     private ChannelService channelService;
 
+    @Operation(summary = "根据 ID 获取频道", description = "")
     @GetMapping("/{id}")
     public Mono<Channel> getChannel(@PathVariable(name = "id") String id,
                                     @RequestParam(name = "cid", required = false) String clientId,
@@ -36,6 +38,7 @@ public class ChannelController {
                 .flatMap(cid -> channelService.getChannel(id, cid));
     }
 
+    @Operation(summary = "创建频道", description = "")
     @PostMapping()
     public Mono<Channel> createChannel(@RequestBody BasicChannel channel,
                                        @RequestParam(name = "cid", required = false) String clientId,
@@ -59,6 +62,7 @@ public class ChannelController {
                 });
     }
 
+    @Operation(summary = "根据 ID 删除频道", description = "")
     @DeleteMapping("/{id}")
     public Mono<Channel> deleteChannel(@PathVariable(name = "id") String id,
                                        @RequestParam(name = "cid", required = false) String clientId,
@@ -68,6 +72,7 @@ public class ChannelController {
                 .flatMap(cid -> channelService.deleteChannel(id, cid));
     }
 
+    @Operation(summary = "更新频道", description = "")
     @PutMapping("/{id}")
     public Mono<Channel> updateChannel(@PathVariable(name = "id") String id,
                                        @RequestBody BasicChannel channel,
@@ -83,6 +88,7 @@ public class ChannelController {
                 });
     }
 
+    @Operation(summary = "查找频道", description = "")
     @GetMapping()
     public Mono<QueryResult<Channel>> findChannels(@RequestParam(name = "key", required = false) String key,
                                                    @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,

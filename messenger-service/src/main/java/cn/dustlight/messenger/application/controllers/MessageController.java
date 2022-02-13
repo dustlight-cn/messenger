@@ -1,6 +1,7 @@
 package cn.dustlight.messenger.application.controllers;
 
 import cn.dustlight.messenger.core.services.MessageStore;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class MessageController {
     @Autowired
     MessageStore messageStore;
 
+    @Operation(summary = "创建并发送消息", description = "如果提供了 channel 则发送给频道内所有人")
     @PostMapping("messages")
     public Flux<Message> sendMessage(@RequestBody BasicMessage message,
                                      @RequestParam(required = false) String channel,
@@ -40,6 +42,8 @@ public class MessageController {
                 .flatMapMany(cid -> {
                     if (StringUtils.hasText(principal.getUidString()))
                         message.setSender(principal.getUidString());
+                    else
+                        message.setSender(null);
                     message.setClientId(cid);
                     if (StringUtils.hasText(channel))
                         return service.sendMessage(message, channel);
@@ -48,6 +52,7 @@ public class MessageController {
                 });
     }
 
+    @Operation(summary = "获取最新消息列表", description = "以发信者 ID 分组的最新消息列表")
     @GetMapping("chat-list")
     public Flux<Message> getChatList(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                      @RequestParam(name = "size", required = false, defaultValue = "10") int size,
@@ -58,6 +63,7 @@ public class MessageController {
                 .flatMapMany(cid -> messageStore.getChatList(cid, principal.getUidString(), page, size));
     }
 
+    @Operation(summary = "获取消息列表", description = "获取与目标的对话")
     @GetMapping("chat/{target}")
     public Flux<Message> getChat(@PathVariable(name = "target") String target,
                                  @RequestParam(name = "page", required = false, defaultValue = "0") int page,
@@ -69,6 +75,7 @@ public class MessageController {
                 .flatMapMany(cid -> messageStore.getChat(cid, principal.getUidString(), target, page, size));
     }
 
+    @Operation(summary = "标记消息为已读", description = "")
     @PostMapping("messages/read")
     public Mono<Void> markRead(@RequestParam(name = "cid", required = false) String clientId,
                                @RequestBody Collection<String> ids,
