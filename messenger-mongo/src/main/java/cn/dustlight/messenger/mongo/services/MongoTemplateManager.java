@@ -59,13 +59,12 @@ public abstract class MongoTemplateManager<T extends NotificationTemplate> imple
         if (template == null)
             return Mono.error(ErrorEnum.TEMPLATE_NOT_FOUND.getException());
         Update u = new Update();
-        BasicNotificationTemplate t = new BasicNotificationTemplate();
         if (template.getContent() != null)
-            u.set("content", t.getContent());
+            u.set("content", template.getContent());
         if (template.getName() != null)
-            u.set("name", t.getName());
+            u.set("name", template.getName());
         if (template.getStatus() != null)
-            u.set("status", t.getStatus());
+            u.set("status", template.getStatus());
         u.set("updatedAt", new Date());
         return operations.findAndModify(Query.query(where("_id").is(template.getId()).and("clientId").is(template.getClientId())),
                         u,
