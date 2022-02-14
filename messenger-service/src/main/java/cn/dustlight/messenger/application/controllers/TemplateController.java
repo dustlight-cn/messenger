@@ -47,7 +47,7 @@ public class TemplateController implements InitializingBean {
                                                   @RequestParam(name = "cid", required = false) String clientId,
                                                   ReactiveAuthClient reactiveAuthClient,
                                                   AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> getManager(templateType).getTemplate(id, cid));
     }
 
@@ -60,7 +60,7 @@ public class TemplateController implements InitializingBean {
                                                      @RequestParam(name = "cid", required = false) String clientId,
                                                      ReactiveAuthClient reactiveAuthClient,
                                                      AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> {
                     template.setClientId(cid);
                     template.setOwner(principal.getUidString());
@@ -79,7 +79,7 @@ public class TemplateController implements InitializingBean {
                                      @RequestParam(name = "cid", required = false) String clientId,
                                      ReactiveAuthClient reactiveAuthClient,
                                      AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> {
                     template.setId(id);
                     template.setClientId(cid);
@@ -98,7 +98,7 @@ public class TemplateController implements InitializingBean {
                                      @RequestParam(name = "cid", required = false) String clientId,
                                      ReactiveAuthClient reactiveAuthClient,
                                      AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> getManager(templateType).deleteTemplate(id, cid));
     }
 
@@ -113,7 +113,7 @@ public class TemplateController implements InitializingBean {
                                                                  @RequestParam(name = "cid", required = false) String clientId,
                                                                  ReactiveAuthClient reactiveAuthClient,
                                                                  AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> getManager(templateType)
                         .getTemplates(key, page, size, cid, principal.getUidString()));
     }
