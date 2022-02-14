@@ -46,7 +46,7 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
         if (channel.getOwner() != null)
             update.set("owner", channel.getOwner());
         if (channel.getMembers() != null)
-            update.set("member", channel.getMembers());
+            update.set("members", channel.getMembers());
         if (channel.getDescription() != null)
             update.set("description", channel.getDescription());
         if (channel.getName() != null)
@@ -74,7 +74,7 @@ public abstract class MongoChannelService<T extends Channel> implements ChannelS
 
     @Override
     public Mono<QueryResult<T>> findChannel(String key, int page, int size, String clientId, String user) {
-        Query query = Query.query(where("clientId").is(clientId).orOperator(where("owner").in(user),where("member").in(user)));
+        Query query = Query.query(where("clientId").is(clientId).orOperator(where("owner").in(user),where("members").in(user)));
         if (StringUtils.hasText(key))
             query.addCriteria(TextCriteria.forDefaultLanguage().matching(key));
         return operations.count(query,
