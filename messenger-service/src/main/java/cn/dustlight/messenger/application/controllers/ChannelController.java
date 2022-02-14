@@ -34,7 +34,7 @@ public class ChannelController {
                                     @RequestParam(name = "cid", required = false) String clientId,
                                     ReactiveAuthClient reactiveAuthClient,
                                     AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> channelService.getChannel(id, cid));
     }
 
@@ -44,7 +44,7 @@ public class ChannelController {
                                        @RequestParam(name = "cid", required = false) String clientId,
                                        ReactiveAuthClient reactiveAuthClient,
                                        AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> {
                     if (StringUtils.hasText(principal.getUidString()))
                         if (channel.getOwner() != null) {
@@ -68,7 +68,7 @@ public class ChannelController {
                                        @RequestParam(name = "cid", required = false) String clientId,
                                        ReactiveAuthClient reactiveAuthClient,
                                        AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> channelService.deleteChannel(id, cid));
     }
 
@@ -79,7 +79,7 @@ public class ChannelController {
                                        @RequestParam(name = "cid", required = false) String clientId,
                                        ReactiveAuthClient reactiveAuthClient,
                                        AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> {
                     channel.setClientId(cid);
                     Date t = new Date();
@@ -96,7 +96,7 @@ public class ChannelController {
                                                    @RequestParam(name = "cid", required = false) String clientId,
                                                    ReactiveAuthClient reactiveAuthClient,
                                                    AuthPrincipal principal) {
-        return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
+        return AuthPrincipalUtil.obtainClientIdRequireMember(reactiveAuthClient, clientId, principal)
                 .flatMap(cid -> channelService.findChannel(key, page, size, cid, principal.getUidString()));
     }
 }
