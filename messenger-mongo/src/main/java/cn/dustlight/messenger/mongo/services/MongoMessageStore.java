@@ -118,15 +118,23 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     @Override
     public Flux<T> getChatList(String clientId, String user, String offset, int size) {
         Criteria c = Criteria.where("clientId").is(clientId).and("receiver").is(user);
-        if (StringUtils.hasText(offset))
-            c.and("_id").lt(new ObjectId(offset));
-        Aggregation aggs = Aggregation.newAggregation(
-                Aggregation.match(c),
-                Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
-                Aggregation.group("$sender").first("$$ROOT").as("doc"),
-                Aggregation.limit(size),
-                Aggregation.replaceRoot("$doc")
-        );
+        Aggregation aggs = StringUtils.hasText(offset) ?
+                Aggregation.newAggregation(
+                        Aggregation.match(c),
+                        Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
+                        Aggregation.group("$sender").first("$$ROOT").as("doc"),
+                        Aggregation.match(Criteria.where("_id").lt(new ObjectId(offset))), // <----------
+                        Aggregation.limit(size),
+                        Aggregation.replaceRoot("$doc")
+                )
+                :
+                Aggregation.newAggregation(
+                        Aggregation.match(c),
+                        Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
+                        Aggregation.group("$sender").first("$$ROOT").as("doc"),
+                        Aggregation.limit(size),
+                        Aggregation.replaceRoot("$doc")
+                );
         return operations.aggregate(aggs, collectionName, getEntitiesClass());
     }
 }

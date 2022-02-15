@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <groupId>cn.dustlight.messenger</groupId>
     <artifactId>messenger-parent</artifactId>
-    <version>0.0.4-alpha-2</version>
+    <version>0.0.4-alpha-3</version>
     <name>messenger-parent</name>
     <description>消息推送服务</description>
 
