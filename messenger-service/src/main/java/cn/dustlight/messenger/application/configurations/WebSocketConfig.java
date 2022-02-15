@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.application.configurations;
 
+import cn.dustlight.auth.client.reactive.ReactiveAuthClient;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,9 @@ public class WebSocketConfig {
     public RabbitWebSocketHandler rabbitWebSocketHandler(@Autowired ConnectionFactory factory,
                                                          @Autowired TokenService tokenService,
                                                          @Autowired MessageStore messageStore,
+                                                         @Autowired ReactiveAuthClient authClient,
                                                          @Autowired RabbitTemplate template) {
-        return new RabbitWebSocketHandler(factory, tokenService, messageStore, template);
+        return new RabbitWebSocketHandler(factory, tokenService, authClient, messageStore, template);
     }
 
     @Bean

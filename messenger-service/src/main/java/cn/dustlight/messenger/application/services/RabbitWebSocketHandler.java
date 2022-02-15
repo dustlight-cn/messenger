@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.application.services;
 
+import cn.dustlight.auth.client.reactive.ReactiveAuthClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,29 +34,33 @@ public class RabbitWebSocketHandler extends AbstractWebsocketHandler {
     private RabbitTemplate rabbitTemplate;
 
     public RabbitWebSocketHandler(ConnectionFactory connectionFactory,
+                                  ReactiveAuthClient authClient,
                                   TokenService tokenService) {
         admin = new RabbitAdmin(connectionFactory);
         this.factory = connectionFactory;
         setTokenService(tokenService);
+        setAuthClient(authClient);
         objectMapper = new ObjectMapper();
     }
 
     public RabbitWebSocketHandler(ConnectionFactory connectionFactory,
                                   TokenService tokenService,
+                                  ReactiveAuthClient authClient,
                                   MessageStore messageStore,
                                   RabbitTemplate rabbitTemplate) {
         admin = new RabbitAdmin(connectionFactory);
         this.factory = connectionFactory;
         setTokenService(tokenService);
+        setAuthClient(authClient);
         objectMapper = new ObjectMapper();
         this.messageStore = messageStore;
         this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
-    protected Mono<Void> map(AuthPrincipal principal, WebSocketSession session) {
+    protected Mono<Void> map(AuthPrincipal principal, String clientId, WebSocketSession session) {
 
-        String routingKey = principal.getClientId() + "/" + principal.getUid();
+        String routingKey = clientId + "/" + principal.getUid();
         Queue queue = admin.declareQueue();
 
         Binding binding = new Binding(queue.getName(),
