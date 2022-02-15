@@ -2,7 +2,6 @@ package cn.dustlight.messenger.core.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 public interface Message extends Serializable {
 
@@ -14,7 +13,7 @@ public interface Message extends Serializable {
 
     String getReceiver();
 
-    Channel getChannel();
+    String getChannel();
 
     String getClientId();
 

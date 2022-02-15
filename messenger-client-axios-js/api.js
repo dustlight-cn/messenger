@@ -468,13 +468,13 @@ const MessagesApiAxiosParamCreator = function (configuration) {
          * 获取与目标的对话
          * @summary 获取消息列表
          * @param {string} target
-         * @param {number} [page]
+         * @param {string} [offset]
          * @param {number} [size]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChat: (target, page, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+        getChat: (target, offset, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
             // verify required parameter 'target' is not null or undefined
             (0, common_1.assertParamExists)('getChat', 'target', target);
             const localVarPath = `/v1/chat/{target}`
@@ -491,8 +491,8 @@ const MessagesApiAxiosParamCreator = function (configuration) {
             // authentication auth required
             // oauth required
             yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
             }
             if (size !== undefined) {
                 localVarQueryParameter['size'] = size;
@@ -511,13 +511,13 @@ const MessagesApiAxiosParamCreator = function (configuration) {
         /**
          * 以发信者 ID 分组的最新消息列表
          * @summary 获取最新消息列表
-         * @param {number} [page]
+         * @param {string} [offset]
          * @param {number} [size]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatList: (page, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
+        getChatList: (offset, size, cid, options = {}) => __awaiter(this, void 0, void 0, function* () {
             const localVarPath = `/v1/chat-list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
@@ -531,8 +531,8 @@ const MessagesApiAxiosParamCreator = function (configuration) {
             // authentication auth required
             // oauth required
             yield (0, common_1.setOAuthToObject)(localVarHeaderParameter, "auth", [], configuration);
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
             }
             if (size !== undefined) {
                 localVarQueryParameter['size'] = size;
@@ -640,30 +640,30 @@ const MessagesApiFp = function (configuration) {
          * 获取与目标的对话
          * @summary 获取消息列表
          * @param {string} target
-         * @param {number} [page]
+         * @param {string} [offset]
          * @param {number} [size]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChat(target, page, size, cid, options) {
+        getChat(target, offset, size, cid, options) {
             return __awaiter(this, void 0, void 0, function* () {
-                const localVarAxiosArgs = yield localVarAxiosParamCreator.getChat(target, page, size, cid, options);
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getChat(target, offset, size, cid, options);
                 return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
         /**
          * 以发信者 ID 分组的最新消息列表
          * @summary 获取最新消息列表
-         * @param {number} [page]
+         * @param {string} [offset]
          * @param {number} [size]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatList(page, size, cid, options) {
+        getChatList(offset, size, cid, options) {
             return __awaiter(this, void 0, void 0, function* () {
-                const localVarAxiosArgs = yield localVarAxiosParamCreator.getChatList(page, size, cid, options);
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getChatList(offset, size, cid, options);
                 return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -710,26 +710,26 @@ const MessagesApiFactory = function (configuration, basePath, axios) {
          * 获取与目标的对话
          * @summary 获取消息列表
          * @param {string} target
-         * @param {number} [page]
+         * @param {string} [offset]
          * @param {number} [size]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChat(target, page, size, cid, options) {
-            return localVarFp.getChat(target, page, size, cid, options).then((request) => request(axios, basePath));
+        getChat(target, offset, size, cid, options) {
+            return localVarFp.getChat(target, offset, size, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 以发信者 ID 分组的最新消息列表
          * @summary 获取最新消息列表
-         * @param {number} [page]
+         * @param {string} [offset]
          * @param {number} [size]
          * @param {string} [cid]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatList(page, size, cid, options) {
-            return localVarFp.getChatList(page, size, cid, options).then((request) => request(axios, basePath));
+        getChatList(offset, size, cid, options) {
+            return localVarFp.getChatList(offset, size, cid, options).then((request) => request(axios, basePath));
         },
         /**
          *
@@ -768,28 +768,28 @@ class MessagesApi extends base_1.BaseAPI {
      * 获取与目标的对话
      * @summary 获取消息列表
      * @param {string} target
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    getChat(target, page, size, cid, options) {
-        return (0, exports.MessagesApiFp)(this.configuration).getChat(target, page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    getChat(target, offset, size, cid, options) {
+        return (0, exports.MessagesApiFp)(this.configuration).getChat(target, offset, size, cid, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 以发信者 ID 分组的最新消息列表
      * @summary 获取最新消息列表
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    getChatList(page, size, cid, options) {
-        return (0, exports.MessagesApiFp)(this.configuration).getChatList(page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    getChatList(offset, size, cid, options) {
+        return (0, exports.MessagesApiFp)(this.configuration).getChatList(offset, size, cid, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      *

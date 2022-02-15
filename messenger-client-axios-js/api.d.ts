@@ -96,15 +96,19 @@ export interface BasicMessage {
      * @type {string}
      * @memberof BasicMessage
      */
+    channel?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof BasicMessage
+     */
     clientId?: string;
     /**
      *
-     * @type {{ [key: string]: object; }}
+     * @type {object}
      * @memberof BasicMessage
      */
-    content?: {
-        [key: string]: object;
-    };
+    content?: object;
     /**
      *
      * @type {string}
@@ -307,12 +311,16 @@ export interface Message {
     id?: string;
     /**
      *
-     * @type {{ [key: string]: object; }}
+     * @type {object}
      * @memberof Message
      */
-    content?: {
-        [key: string]: object;
-    };
+    content?: object;
+    /**
+     *
+     * @type {string}
+     * @memberof Message
+     */
+    channel?: string;
     /**
      *
      * @type {string}
@@ -327,16 +335,16 @@ export interface Message {
     clientId?: string;
     /**
      *
-     * @type {string}
-     * @memberof Message
-     */
-    createdAt?: string;
-    /**
-     *
      * @type {number}
      * @memberof Message
      */
     status?: number;
+    /**
+     *
+     * @type {string}
+     * @memberof Message
+     */
+    createdAt?: string;
     /**
      *
      * @type {string}
@@ -387,6 +395,18 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
+    status?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Notification
+     */
+    createdAt?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Notification
+     */
     channelId?: string;
     /**
      *
@@ -400,18 +420,6 @@ export interface Notification {
      * @memberof Notification
      */
     templateId?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Notification
-     */
-    createdAt?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Notification
-     */
-    status?: string;
 }
 /**
  *
@@ -745,23 +753,23 @@ export declare const MessagesApiAxiosParamCreator: (configuration?: Configuratio
      * 获取与目标的对话
      * @summary 获取消息列表
      * @param {string} target
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChat: (target: string, page?: number, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
+    getChat: (target: string, offset?: string, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      * 以发信者 ID 分组的最新消息列表
      * @summary 获取最新消息列表
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChatList: (page?: number, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
+    getChatList: (offset?: string, size?: number, cid?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @summary 标记消息为已读
@@ -791,23 +799,23 @@ export declare const MessagesApiFp: (configuration?: Configuration) => {
      * 获取与目标的对话
      * @summary 获取消息列表
      * @param {string} target
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChat(target: string, page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
+    getChat(target: string, offset?: string, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
     /**
      * 以发信者 ID 分组的最新消息列表
      * @summary 获取最新消息列表
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChatList(page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
+    getChatList(offset?: string, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>>;
     /**
      *
      * @summary 标记消息为已读
@@ -837,23 +845,23 @@ export declare const MessagesApiFactory: (configuration?: Configuration, basePat
      * 获取与目标的对话
      * @summary 获取消息列表
      * @param {string} target
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChat(target: string, page?: number, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>>;
+    getChat(target: string, offset?: string, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>>;
     /**
      * 以发信者 ID 分组的最新消息列表
      * @summary 获取最新消息列表
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getChatList(page?: number, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>>;
+    getChatList(offset?: string, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>>;
     /**
      *
      * @summary 标记消息为已读
@@ -885,25 +893,25 @@ export declare class MessagesApi extends BaseAPI {
      * 获取与目标的对话
      * @summary 获取消息列表
      * @param {string} target
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    getChat(target: string, page?: number, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
+    getChat(target: string, offset?: string, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
     /**
      * 以发信者 ID 分组的最新消息列表
      * @summary 获取最新消息列表
-     * @param {number} [page]
+     * @param {string} [offset]
      * @param {number} [size]
      * @param {string} [cid]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    getChatList(page?: number, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
+    getChatList(offset?: string, size?: number, cid?: string, options?: any): Promise<import("axios").AxiosResponse<Message[]>>;
     /**
      *
      * @summary 标记消息为已读

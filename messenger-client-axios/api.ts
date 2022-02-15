@@ -105,13 +105,19 @@ export interface BasicMessage {
      * @type {string}
      * @memberof BasicMessage
      */
+    channel?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BasicMessage
+     */
     clientId?: string;
     /**
      * 
-     * @type {{ [key: string]: object; }}
+     * @type {object}
      * @memberof BasicMessage
      */
-    content?: { [key: string]: object; };
+    content?: object;
     /**
      * 
      * @type {string}
@@ -310,10 +316,16 @@ export interface Message {
     id?: string;
     /**
      * 
-     * @type {{ [key: string]: object; }}
+     * @type {object}
      * @memberof Message
      */
-    content?: { [key: string]: object; };
+    content?: object;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    channel?: string;
     /**
      * 
      * @type {string}
@@ -328,16 +340,16 @@ export interface Message {
     clientId?: string;
     /**
      * 
-     * @type {string}
-     * @memberof Message
-     */
-    createdAt?: string;
-    /**
-     * 
      * @type {number}
      * @memberof Message
      */
     status?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Message
+     */
+    createdAt?: string;
     /**
      * 
      * @type {string}
@@ -386,6 +398,18 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
+    status?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Notification
+     */
+    createdAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Notification
+     */
     channelId?: string;
     /**
      * 
@@ -399,18 +423,6 @@ export interface Notification {
      * @memberof Notification
      */
     templateId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Notification
-     */
-    createdAt?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Notification
-     */
-    status?: string;
 }
 /**
  * 
@@ -984,13 +996,13 @@ export const MessagesApiAxiosParamCreator = function (configuration?: Configurat
          * 获取与目标的对话
          * @summary 获取消息列表
          * @param {string} target 
-         * @param {number} [page] 
+         * @param {string} [offset] 
          * @param {number} [size] 
          * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChat: async (target: string, page?: number, size?: number, cid?: string, options: any = {}): Promise<RequestArgs> => {
+        getChat: async (target: string, offset?: string, size?: number, cid?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'target' is not null or undefined
             assertParamExists('getChat', 'target', target)
             const localVarPath = `/v1/chat/{target}`
@@ -1010,8 +1022,8 @@ export const MessagesApiAxiosParamCreator = function (configuration?: Configurat
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
 
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
             }
 
             if (size !== undefined) {
@@ -1036,13 +1048,13 @@ export const MessagesApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 以发信者 ID 分组的最新消息列表
          * @summary 获取最新消息列表
-         * @param {number} [page] 
+         * @param {string} [offset] 
          * @param {number} [size] 
          * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatList: async (page?: number, size?: number, cid?: string, options: any = {}): Promise<RequestArgs> => {
+        getChatList: async (offset?: string, size?: number, cid?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/chat-list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1059,8 +1071,8 @@ export const MessagesApiAxiosParamCreator = function (configuration?: Configurat
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "auth", [], configuration)
 
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
             }
 
             if (size !== undefined) {
@@ -1191,27 +1203,27 @@ export const MessagesApiFp = function(configuration?: Configuration) {
          * 获取与目标的对话
          * @summary 获取消息列表
          * @param {string} target 
-         * @param {number} [page] 
+         * @param {string} [offset] 
          * @param {number} [size] 
          * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getChat(target: string, page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getChat(target, page, size, cid, options);
+        async getChat(target: string, offset?: string, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChat(target, offset, size, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 以发信者 ID 分组的最新消息列表
          * @summary 获取最新消息列表
-         * @param {number} [page] 
+         * @param {string} [offset] 
          * @param {number} [size] 
          * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getChatList(page?: number, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getChatList(page, size, cid, options);
+        async getChatList(offset?: string, size?: number, cid?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChatList(offset, size, cid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1253,26 +1265,26 @@ export const MessagesApiFactory = function (configuration?: Configuration, baseP
          * 获取与目标的对话
          * @summary 获取消息列表
          * @param {string} target 
-         * @param {number} [page] 
+         * @param {string} [offset] 
          * @param {number} [size] 
          * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChat(target: string, page?: number, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>> {
-            return localVarFp.getChat(target, page, size, cid, options).then((request) => request(axios, basePath));
+        getChat(target: string, offset?: string, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>> {
+            return localVarFp.getChat(target, offset, size, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 以发信者 ID 分组的最新消息列表
          * @summary 获取最新消息列表
-         * @param {number} [page] 
+         * @param {string} [offset] 
          * @param {number} [size] 
          * @param {string} [cid] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatList(page?: number, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>> {
-            return localVarFp.getChatList(page, size, cid, options).then((request) => request(axios, basePath));
+        getChatList(offset?: string, size?: number, cid?: string, options?: any): AxiosPromise<Array<Message>> {
+            return localVarFp.getChatList(offset, size, cid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1311,29 +1323,29 @@ export class MessagesApi extends BaseAPI {
      * 获取与目标的对话
      * @summary 获取消息列表
      * @param {string} target 
-     * @param {number} [page] 
+     * @param {string} [offset] 
      * @param {number} [size] 
      * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    public getChat(target: string, page?: number, size?: number, cid?: string, options?: any) {
-        return MessagesApiFp(this.configuration).getChat(target, page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    public getChat(target: string, offset?: string, size?: number, cid?: string, options?: any) {
+        return MessagesApiFp(this.configuration).getChat(target, offset, size, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 以发信者 ID 分组的最新消息列表
      * @summary 获取最新消息列表
-     * @param {number} [page] 
+     * @param {string} [offset] 
      * @param {number} [size] 
      * @param {string} [cid] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MessagesApi
      */
-    public getChatList(page?: number, size?: number, cid?: string, options?: any) {
-        return MessagesApiFp(this.configuration).getChatList(page, size, cid, options).then((request) => request(this.axios, this.basePath));
+    public getChatList(offset?: string, size?: number, cid?: string, options?: any) {
+        return MessagesApiFp(this.configuration).getChatList(offset, size, cid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
