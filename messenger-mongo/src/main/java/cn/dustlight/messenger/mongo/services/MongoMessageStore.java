@@ -5,6 +5,7 @@ import cn.dustlight.messenger.core.entities.QueryResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -103,7 +104,7 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
                 .orOperator(Criteria.where("sender").is(user).and("receiver").is(target),
                         Criteria.where("sender").is(target).and("receiver").is(user)));
         if (StringUtils.hasText(offset))
-            query.addCriteria(Criteria.where("_id").lt(offset));
+            query.addCriteria(Criteria.where("_id").lt(new ObjectId(offset)));
         return operations.count(query, collectionName)
                 .flatMap(c -> operations.find(query
                                         .with(Pageable.ofSize(size))
@@ -118,7 +119,7 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     public Flux<T> getChatList(String clientId, String user, String offset, int size) {
         Criteria c = Criteria.where("clientId").is(clientId).and("receiver").is(user);
         if (StringUtils.hasText(offset))
-            c.and("_id").lt(offset);
+            c.and("_id").lt(new ObjectId(offset));
         Aggregation aggs = Aggregation.newAggregation(
                 Aggregation.match(c),
                 Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
