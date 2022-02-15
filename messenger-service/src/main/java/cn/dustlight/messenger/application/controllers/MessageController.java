@@ -1,5 +1,6 @@
 package cn.dustlight.messenger.application.controllers;
 
+import cn.dustlight.messenger.core.entities.QueryResult;
 import cn.dustlight.messenger.core.services.MessageStore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -65,14 +66,14 @@ public class MessageController {
 
     @Operation(summary = "获取消息列表", description = "获取与目标的对话")
     @GetMapping("chat/{target}")
-    public Flux<Message> getChat(@PathVariable(name = "target") String target,
-                                 @RequestParam(name = "offset", required = false) String offset,
-                                 @RequestParam(name = "size", required = false, defaultValue = "10") int size,
-                                 @RequestParam(name = "cid", required = false) String clientId,
-                                 ReactiveAuthClient reactiveAuthClient,
-                                 AuthPrincipal principal) {
+    public Mono<QueryResult<Message>> getChat(@PathVariable(name = "target") String target,
+                                     @RequestParam(name = "offset", required = false) String offset,
+                                     @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                     @RequestParam(name = "cid", required = false) String clientId,
+                                     ReactiveAuthClient reactiveAuthClient,
+                                     AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMapMany(cid -> messageStore.getChat(cid, principal.getUidString(), target, offset, size));
+                .flatMap(cid -> messageStore.getChat(cid, principal.getUidString(), target, offset, size));
     }
 
     @Operation(summary = "标记消息为已读", description = "")
