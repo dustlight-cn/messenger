@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import cn.dustlight.messenger.core.entities.Message;
 import cn.dustlight.messenger.core.services.MessageStore;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -97,12 +98,16 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     }
 
     @Override
-    public Mono<QueryResult<T>> getChat(String clientId, String user, String target, int page, int size) {
+    public Mono<QueryResult<T>> getChat(String clientId, String user, String target, String offset, int size) {
         Query query = Query.query(Criteria.where("clientId").is(clientId)
                 .orOperator(Criteria.where("sender").is(user).and("receiver").is(target),
                         Criteria.where("sender").is(target).and("receiver").is(user)));
+        if (StringUtils.hasText(offset))
+            query.addCriteria(Criteria.where("_id").lt(offset));
         return operations.count(query, collectionName)
-                .flatMap(c -> operations.find(query.with(Pageable.ofSize(size).withPage(page)).with(Sort.by(Sort.Order.desc("createdAt"))),
+                .flatMap(c -> operations.find(query
+                                        .with(Pageable.ofSize(size))
+                                        .with(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
                                 getEntitiesClass(),
                                 collectionName)
                         .collectList()
@@ -110,12 +115,14 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     }
 
     @Override
-    public Flux<T> getChatList(String clientId, String user, int page, int size) {
+    public Flux<T> getChatList(String clientId, String user, String offset, int size) {
+        Criteria c = Criteria.where("clientId").is(clientId).and("receiver").is(user);
+        if (StringUtils.hasText(offset))
+            c.and("_id").lt(offset);
         Aggregation aggs = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("clientId").is(clientId).and("receiver").is(user)),
-                Aggregation.sort(Sort.by(Sort.Order.desc("createdAt"))),
+                Aggregation.match(c),
+                Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
                 Aggregation.group("$sender").first("$$ROOT").as("doc"),
-                Aggregation.skip(page * size),
                 Aggregation.limit(size),
                 Aggregation.replaceRoot("$doc")
         );

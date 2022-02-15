@@ -12,9 +12,9 @@ public class BasicMessage implements Message {
 
     private String id;
 
-    private String sender, receiver, clientId;
+    private String sender, receiver,channel, clientId;
 
-    private Map<String, Object> content;
+    private Object content;
 
     private Date createdAt, readAt;
 

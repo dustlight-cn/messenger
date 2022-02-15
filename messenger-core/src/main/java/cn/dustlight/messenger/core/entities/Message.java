@@ -8,11 +8,13 @@ public interface Message extends Serializable {
 
     String getId();
 
-    Map<String, Object> getContent();
+    Object getContent();
 
     String getSender();
 
     String getReceiver();
+
+    Channel getChannel();
 
     String getClientId();
 
@@ -24,11 +26,13 @@ public interface Message extends Serializable {
 
     void setId(String id);
 
-    void setContent(Map<String, Object> content);
+    void setContent(Object content);
 
     void setSender(String sender);
 
     void setReceiver(String receiver);
+
+    void setChannel(String channel);
 
     void setClientId(String clientId);
 

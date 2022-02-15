@@ -33,6 +33,7 @@ public abstract class AbstractMessageService<C extends Channel> implements Messa
         message.setId(null);
         message.setCreatedAt(new Date());
         message.setReadAt(null);
+        message.setChannel(null);
         return messageStore.store(message).flatMap(m -> doSend(m));
     }
 
@@ -55,6 +56,7 @@ public abstract class AbstractMessageService<C extends Channel> implements Messa
                         msg.setContent(message.getContent());
                         msg.setSender(message.getSender());
                         msg.setReceiver(receiver);
+                        msg.setChannel(channelId);
                         msg.setClientId(message.getClientId());
                         msg.setId(null);
                         msg.setCreatedAt(new Date());

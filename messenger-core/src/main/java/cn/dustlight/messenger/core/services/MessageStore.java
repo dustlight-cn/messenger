@@ -23,7 +23,7 @@ public interface MessageStore<T extends Message> {
 
     Flux<T> update(Collection<String> messageIds, T update, String clientId);
 
-    Mono<QueryResult<T>> getChat(String clientId, String user, String target, int page, int size);
+    Mono<QueryResult<T>> getChat(String clientId, String user, String target, String offset, int size);
 
-    Flux<T> getChatList(String clientId, String user, int page, int size);
+    Flux<T> getChatList(String clientId, String user, String offset, int size);
 }

@@ -54,25 +54,25 @@ public class MessageController {
 
     @Operation(summary = "获取最新消息列表", description = "以发信者 ID 分组的最新消息列表")
     @GetMapping("chat-list")
-    public Flux<Message> getChatList(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+    public Flux<Message> getChatList(@RequestParam(name = "offset", required = false) String offset,
                                      @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                      @RequestParam(name = "cid", required = false) String clientId,
                                      ReactiveAuthClient reactiveAuthClient,
                                      AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMapMany(cid -> messageStore.getChatList(cid, principal.getUidString(), page, size));
+                .flatMapMany(cid -> messageStore.getChatList(cid, principal.getUidString(), offset, size));
     }
 
     @Operation(summary = "获取消息列表", description = "获取与目标的对话")
     @GetMapping("chat/{target}")
     public Flux<Message> getChat(@PathVariable(name = "target") String target,
-                                 @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                 @RequestParam(name = "offset", required = false) String offset,
                                  @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                  @RequestParam(name = "cid", required = false) String clientId,
                                  ReactiveAuthClient reactiveAuthClient,
                                  AuthPrincipal principal) {
         return AuthPrincipalUtil.obtainClientId(reactiveAuthClient, clientId, principal)
-                .flatMapMany(cid -> messageStore.getChat(cid, principal.getUidString(), target, page, size));
+                .flatMapMany(cid -> messageStore.getChat(cid, principal.getUidString(), target, offset, size));
     }
 
     @Operation(summary = "标记消息为已读", description = "")
