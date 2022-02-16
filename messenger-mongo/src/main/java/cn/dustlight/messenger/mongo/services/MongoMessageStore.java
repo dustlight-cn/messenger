@@ -5,11 +5,15 @@ import cn.dustlight.messenger.core.entities.QueryResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperationContext;
+import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -19,8 +23,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -119,11 +122,12 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
     public Flux<T> getChatList(String clientId, String user, String offset, int size) {
         Criteria c = Criteria.where("clientId").is(clientId)
                 .orOperator(Criteria.where("receiver").is(user), Criteria.where("sender").is(user));
+
         Aggregation aggs = StringUtils.hasText(offset) ?
                 Aggregation.newAggregation(
                         Aggregation.match(c),
                         Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
-                        Aggregation.group("$sender").first("$$ROOT").as("doc"),
+                        ChatGroup.getInstance(),
                         Aggregation.match(Criteria.where("_id").lt(new ObjectId(offset))), // <----------
                         Aggregation.limit(size),
                         Aggregation.replaceRoot("$doc")
@@ -132,10 +136,52 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
                 Aggregation.newAggregation(
                         Aggregation.match(c),
                         Aggregation.sort(Sort.by(Sort.Order.desc("_id"), Sort.Order.desc("createdAt"))),
-                        Aggregation.group("$sender").first("$$ROOT").as("doc"),
+                        ChatGroup.getInstance(),
                         Aggregation.limit(size),
                         Aggregation.replaceRoot("$doc")
                 );
+
         return operations.aggregate(aggs, collectionName, getEntitiesClass());
+    }
+
+    public static class ChatGroup implements AggregationOperation {
+
+        private Document document;
+
+        private final static ChatGroup instance = new ChatGroup();
+
+        public static ChatGroup getInstance() {
+            return instance;
+        }
+
+        private ChatGroup() {
+            List<String> elems = Arrays.asList("$sender", "$receiver");
+            Map<String, List<String>> min = new HashMap<>();
+            min.put("$min", elems);
+            Map<String, List<String>> max = new HashMap<>();
+            max.put("$max", elems);
+            Map<String, String> doc = new HashMap<>();
+            doc.put("$first", "$$ROOT");
+
+            Document document = new Document();
+            document.put(Fields.UNDERSCORE_ID, Arrays.asList(min, max));
+            document.put("doc", doc);
+            this.document = new Document(getOperator(), document);
+        }
+
+        @Override
+        public Document toDocument(AggregationOperationContext aggregationOperationContext) {
+            return document;
+        }
+
+        @Override
+        public List<Document> toPipelineStages(AggregationOperationContext context) {
+            return AggregationOperation.super.toPipelineStages(context);
+        }
+
+        @Override
+        public String getOperator() {
+            return "$group";
+        }
     }
 }
