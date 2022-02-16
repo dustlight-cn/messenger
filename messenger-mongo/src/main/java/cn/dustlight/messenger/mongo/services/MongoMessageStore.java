@@ -117,7 +117,8 @@ public abstract class MongoMessageStore<T extends Message> implements MessageSto
 
     @Override
     public Flux<T> getChatList(String clientId, String user, String offset, int size) {
-        Criteria c = Criteria.where("clientId").is(clientId).and("receiver").is(user);
+        Criteria c = Criteria.where("clientId").is(clientId)
+                .orOperator(Criteria.where("receiver").is(user), Criteria.where("sender").is(user));
         Aggregation aggs = StringUtils.hasText(offset) ?
                 Aggregation.newAggregation(
                         Aggregation.match(c),
