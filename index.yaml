@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   messenger-service:
   - apiVersion: v2
+    appVersion: 0.0.4-alpha-5
+    created: "2022-02-17T03:24:14.296410932Z"
+    description: Message and Norification service
+    digest: f82fbd147bc46e3620715b0f863c8fb8f973cece64ce604746ec5bc46e1cc9b8
+    name: messenger-service
+    type: application
+    urls:
+    - https://github.com/dustlight-cn/messenger/releases/download/messenger-service-0.0.3/messenger-service-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: 0.0.4-alpha
     created: "2022-02-13T13:33:12.672737822Z"
     description: Message and Norification service
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/dustlight-cn/messenger/releases/download/messenger-service-0.0.1/messenger-service-0.0.1.tgz
     version: 0.0.1
-generated: "2022-02-13T13:33:12.672745821Z"
+generated: "2022-02-17T03:24:14.296665443Z"
