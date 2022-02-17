@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: dustlightcn/messenger-service
-  tag: "0.0.4-alpha"
+  tag: "0.0.4-alpha-5"
 
 ingress:
   className: "nginx"
